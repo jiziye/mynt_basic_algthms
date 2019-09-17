@@ -14,7 +14,7 @@
   ```sh
   mkdir build
   cd build
-  cmake .. -DUnitTest=true
+  cmake .. -DBUILD_TEST=ON
   make -j2
   ```
 

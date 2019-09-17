@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(mynt_basic_algthms)
 
 option(BUILD_TEST "Build Unit Test Program for the project (requires GTest)" OFF)
+option(BUILD_DOC  "Create and install the HTML based API documentation (requires Doxygen)" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -32,5 +33,24 @@ if(BUILD_TEST)
     if(GTest_FOUND)
         include_directories(${GTEST_INCLUDE_DIRS})
         add_subdirectory(unit_test)
+    endif()
+endif()
+
+## build doc with doxygen
+if(BUILD_DOC)
+    find_package(Doxygen)
+    if(NOT DOXYGEN_FOUND)
+        message(FATAL_ERROR "NOT Found doxygen which is needed to build the documentation.")
+    else()
+        message(STATUS "Found doxygen, run `make doc` to build documentation")
+        set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/config/Doxyfile.config)
+        set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+        configure_file(${doxyfile_in} ${doxyfile} @ONLY)
+        add_custom_target(doc
+                COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                COMMENT "Generating API documentation with Doxygen"
+                VERBATIM)
+        install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc)
     endif()
 endif()

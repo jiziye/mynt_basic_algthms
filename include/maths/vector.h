@@ -71,7 +71,7 @@ namespace mynt {
         }
 
         inline FLOAT norm() {
-            v_.l2norm();
+            return v_.l2norm();
         }
 
         friend std::ostream &operator<<(std::ostream &out, Vector &v) {

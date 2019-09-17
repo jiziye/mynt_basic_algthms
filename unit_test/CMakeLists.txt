@@ -1,5 +1,6 @@
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+include_directories(/usr/include/eigen3/)
 link_libraries(gtest pthread)
 
 ## maths
@@ -15,3 +16,5 @@ add_executable(test_cv gtest_main.cpp test_cv.cpp)
 target_link_libraries(test_cv ${OpenCV_LIBS})
 
 ## kinematics
+add_executable(test_kinematics gtest_main.cpp test_kinematics.cpp)
+target_link_libraries(test_kinematics mynt_maths)

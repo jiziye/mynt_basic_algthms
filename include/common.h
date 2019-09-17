@@ -24,9 +24,7 @@ namespace mynt {
   typedef unsigned __int64  uint64_t;
 #endif
 
-    typedef double FLOAT;      // double precision
-//    typedef float  FLOAT;    // single precision
-
+    typedef double FLOAT; // double precision, float for single precision
 }
 
 #endif //MYNT_BASIC_ALGTHMS_COMMON_H

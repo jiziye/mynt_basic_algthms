@@ -24,6 +24,8 @@ namespace mynt {
         // assignment operator, copies contents of M
         Matrix &operator=(const Matrix &M);
 
+        FLOAT &operator()(const int row, const int col);
+
         // copies submatrix of M into array 'val', default values copy whole row/column/matrix
         void getData(FLOAT *val_, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
 

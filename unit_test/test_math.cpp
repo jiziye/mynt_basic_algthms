@@ -8,7 +8,7 @@
 
 TEST(maths, Matrix)
 {
-    Matrix ma = Matrix::eye(5);
+    mynt::Matrix ma = mynt::Matrix::eye(5);
     std::cout << "ma: \n" << ma << std::endl;
 }
 

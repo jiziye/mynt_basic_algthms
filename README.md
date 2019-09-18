@@ -26,12 +26,13 @@
   mkdir build
   cd build
   cmake .. -DBUILD_DOC=ON
-  make -j2
+  make doc
   ```
 
 ## Run
 
 * run unit test
+
   ```sh
   cd build
   ./unit_test/test_xxx
@@ -41,12 +42,54 @@
 
 ### Maths
 
-* Matrix
-* Vector
+* Basic Math Methods
+  - [x] Random Number
+  - [ ] Interpolation
+    - [ ] Linear Interpolation
+    - [ ] Bilinear Interpolation
+
+* Data Structures & Methods
+  - [x] Matrix
+  - [x] Vector
 
 ### Computer Vision
-* YImg class
+
+* Data Structure & Methods
+  - [x] Size
+  - [ ] Point2
+  - [ ] RGB
+* 2D Image & Methods
+  - [ ] YImg class
+    - [x] Copy
+    - [ ] ROI Extraction
+    - [ ] Zoom In & Out
+    - [ ] Mean Filter
+    - [ ] Gaussian Filter
+    - [ ] Image Pyramid
+* 2D Features
+  - Key Points
+    - [ ] FAST
+    - [ ] ORB
+  - Discriptors
+  - Line
+    - [ ] Edge
+    - [ ] Straight Line
+* 3D PointCloud
+  - [ ] Point3
+  - [ ] PointCloud
+* Camera
+  - [ ] Camera Models
+* Binocular Stereo Vision
+  - [ ] Stereo Match
+  - [ ] Disparity Compute
+  - [ ] Disparity --> Depth
+  - [ ] Depth --> PointCloud
 
 ### Kinematics
-* Rotation Matrix
-* Quarternion
+
+**Note**: approximate treatment about **small angle**.
+
+* [ ] Rotation Matrix
+* [ ] Quarternion (Hamilton)
+* [ ] Euler Angle
+* [ ] Convertor

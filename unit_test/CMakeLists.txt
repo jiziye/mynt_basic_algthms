@@ -1,6 +1,11 @@
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-include_directories(/usr/include/eigen3/)
+set(CMAKE_MODULE_PATH APPEND "${CMAKE_SOURCE_DIR}/cmake_modules/")
+find_package(Eigen3)
+if(Eigen3_FOUND)
+    include_directories(${EIGEN3_INCLUDE_DIR})
+endif()
+
 link_libraries(gtest pthread)
 
 ## maths

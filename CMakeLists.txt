@@ -60,3 +60,12 @@ if(BUILD_DOC)
         install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc)
     endif()
 endif()
+
+INSTALL(TARGETS mynt_maths
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(DIRECTORY include/maths include/cv include/kinematics
+        DESTINATION include)
+install(FILES include/common.h DESTINATION include)

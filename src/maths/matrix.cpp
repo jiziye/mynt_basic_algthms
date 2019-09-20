@@ -65,6 +65,15 @@ namespace mynt {
         return val[i_][j_];
     }
 
+    FLOAT &Matrix::operator()(const int i_, const int j_) const {
+        if(i_<0 || i_>= m || j_<0 || j_>=n) {
+            FLOAT err = 1e9;
+            std::cerr << "ERROR: Cannot get value from a (" << m << "x" << n << ") matrix." << endl;
+            return err;
+        }
+        return val[i_][j_];
+    }
+
     void Matrix::getData(FLOAT *val_, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
         if (i2 == -1) i2 = m - 1;
         if (j2 == -1) j2 = n - 1;

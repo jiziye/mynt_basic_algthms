@@ -38,6 +38,10 @@ namespace mynt {
             return v_(0, n);
         }
 
+        FLOAT &operator[](int n) const {
+            return v_(0, n);
+        }
+
         unsigned int size() const {
             return n_;
         }

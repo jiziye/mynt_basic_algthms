@@ -8,6 +8,8 @@
 #include <cmath>
 #include <random>
 
+#include "maths/vector.h"
+
 namespace mynt {
 
     inline int uniform_integer(int min, int max) {
@@ -15,6 +17,20 @@ namespace mynt {
         std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
         std::uniform_int_distribution<> dis(min, max);
         return dis(gen);
+    }
+
+    inline Matrix skew_symmetric(const Vector &w) {
+        Matrix w_hat(3, 3);
+        w_hat(0, 0) =  0;
+        w_hat(0, 1) = -w[2];
+        w_hat(0, 2) =  w[1];
+        w_hat(1, 0) =  w[2];
+        w_hat(1, 1) =  0;
+        w_hat(1, 2) = -w[0];
+        w_hat(2, 0) = -w[1];
+        w_hat(2, 1) =  w[0];
+        w_hat(2, 2) =  0;
+        return w_hat;
     }
 }
 

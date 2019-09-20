@@ -6,8 +6,6 @@
 
 #include "maths/math_basics.h"
 #include "maths/random_numbers.h"
-#include "maths/matrix.h"
-#include "maths/vector.h"
 
 TEST(maths, random_number) {
     random_numbers::RandomNumberGenerator random_gen;
@@ -38,5 +36,13 @@ TEST(maths, Vector)
     std::cout << "va: " << va << std::endl;
     std::cout << "vb: " << vb << std::endl;
     std::cout << "vc: " << vc << std::endl;
+}
+
+TEST(maths, math_basic)
+{
+    mynt::FLOAT val[] = {1,2,3};
+    mynt::Vector va = mynt::Vector(3, val);
+    mynt::Matrix ma = mynt::skew_symmetric(va);
+    std::cout << "skew_symmetric ma: \n" << ma << std::endl;
 }
 

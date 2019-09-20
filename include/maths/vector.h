@@ -9,18 +9,21 @@
 
 namespace mynt {
 
+    /**
+     * @brief column vector
+     */
     class Vector {
     public:
-        Vector() {
+        Vector() : is_transposed_(false) {
             n_ = 0;
         }
 
-        Vector(unsigned int n) {
+        Vector(unsigned int n) : is_transposed_(false) {
             v_ = Matrix(1, n);
             n_ = n;
         }
 
-        Vector(unsigned int n, const FLOAT *val) {
+        Vector(unsigned int n, const FLOAT *val) : is_transposed_(false) {
             v_ = Matrix(1, n, val);
             n_ = n;
         }
@@ -30,21 +33,16 @@ namespace mynt {
                 if(n_ != rhs.size())
                     n_ = rhs.size();
                 v_ = rhs.v_;
+                is_transposed_ = rhs.is_transposed_;
             }
             return *this;
         }
 
-        FLOAT &operator[](int n) {
-            return v_(0, n);
-        }
+        FLOAT &operator[](int n) { return v_(0, n); }
 
-        FLOAT &operator[](int n) const {
-            return v_(0, n);
-        }
+        FLOAT &operator[](int n) const { return v_(0, n); }
 
-        unsigned int size() const {
-            return n_;
-        }
+        inline unsigned int size() const { return n_; }
 
         Vector operator+(const Vector &rhs) {
             Vector v;
@@ -67,6 +65,15 @@ namespace mynt {
             return v;
         }
 
+        Matrix operator*(const Vector &v) {
+            int n = v.size();
+            Matrix m(n, n);
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j < n; ++j)
+                    m(i, j) = (*this)[i] * v[j];
+            return m;
+        }
+
         Vector operator/(const FLOAT &m) {
             Vector v;
             v.v_ = v_ / m;
@@ -74,8 +81,20 @@ namespace mynt {
             return v;
         }
 
-        inline FLOAT norm() {
-            return v_.l2norm();
+        inline FLOAT norm() { return v_.l2norm(); }
+
+        inline FLOAT dot(const Vector &v) {
+            FLOAT sum = 0.0;
+            for(int i=0; i<v.size(); ++i)
+                sum += (*this)[i] * v[i];
+            return sum;
+        }
+
+        inline Vector block(int idx, int n) const {
+            Vector v(n);
+            for(int i=0; i<n; ++i)
+                v[i] = (*this)[idx+i];
+            return v;
         }
 
         friend std::ostream &operator<<(std::ostream &out, Vector &v) {
@@ -93,6 +112,7 @@ namespace mynt {
     private:
         Matrix v_;
         unsigned int n_;
+        bool is_transposed_;
     };
 }
 

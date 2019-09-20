@@ -20,7 +20,7 @@ TEST(maths, random_number) {
 TEST(maths, Matrix)
 {
     mynt::Matrix ma = mynt::Matrix::eye(5);
-    std::cout << "ma: \n" << ma << std::endl;
+    std::cout << "ma: \n" << 3.5 * ma << std::endl;
 }
 
 TEST(maths, Vector)
@@ -28,14 +28,22 @@ TEST(maths, Vector)
     mynt::FLOAT val[] = {1,2,3,4,5};
     mynt::Vector va = mynt::Vector(5, val);
 
-    va[1] = 9.6;
+    va[1] = 10;
 
     mynt::Vector vb = va/2.0;
     mynt::Vector vc = va + vb;
 
+    mynt::Vector vd = va.block(1, 3);
+
     std::cout << "va: " << va << std::endl;
     std::cout << "vb: " << vb << std::endl;
     std::cout << "vc: " << vc << std::endl;
+    std::cout << "vd: " << vd << std::endl;
+
+    std::cout << "va dot va: " << va.dot(va) << std::endl;
+
+    mynt::Matrix ma =  va * va;
+    std::cout << "ma: \n" << ma << std::endl;
 }
 
 TEST(maths, math_basic)

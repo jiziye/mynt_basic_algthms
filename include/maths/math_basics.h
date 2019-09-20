@@ -48,12 +48,32 @@ namespace mynt {
      * @param M
      * @return
      */
-    Matrix operator*(FLOAT s, Matrix M) {
-        return M * s;
-    }
+    Matrix operator*(FLOAT s, Matrix M) { return M * s; }
 
-    Vector operator*(FLOAT s, Vector V) {
-        return V * s;
+    /**
+     * @brief s * V
+     * @param s
+     * @param V
+     * @return
+     */
+    Vector operator*(FLOAT s, Vector V) { return V * s; }
+
+    /**
+     * @brief M * V
+     * @param M
+     * @param V
+     * @return
+     */
+    Vector operator*(const Matrix &M, const Vector &V) {
+        assert(M.n == V.size());
+        Vector v(M.m);
+        for(int i=0; i<M.m; ++i) {
+            FLOAT sum_i = 0.0;
+            for(int j=0; j<M.n; ++j)
+                sum_i += M(i,j) * V[j];
+            v[i] = sum_i;
+        }
+        return v;
     }
 }
 

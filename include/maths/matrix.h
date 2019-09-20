@@ -69,7 +69,7 @@ namespace mynt {
         // simple arithmetic operations
         Matrix operator+(const Matrix &M); // add matrix
         Matrix operator-(const Matrix &M); // subtract matrix
-        Matrix operator*(const Matrix &M); // multiply with matrix
+        Matrix operator*(const Matrix &M) const; // multiply with matrix
         Matrix operator*(const FLOAT &s);  // multiply with scalar
         Matrix operator/(const Matrix &M); // divide elementwise by matrix (or vector)
         Matrix operator/(const FLOAT &s);  // divide by scalar

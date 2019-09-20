@@ -256,7 +256,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator*(const Matrix &M) {
+    Matrix Matrix::operator*(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
         if (A.n != B.m) {

@@ -14,18 +14,24 @@ namespace mynt {
      */
     class Vector {
     public:
-        Vector() : is_transposed_(false) {
+        Vector() {
             n_ = 0;
         }
 
-        Vector(unsigned int n) : is_transposed_(false) {
+        Vector(unsigned int n) {
             v_ = Matrix(1, n);
             n_ = n;
         }
 
-        Vector(unsigned int n, const FLOAT *val) : is_transposed_(false) {
+        Vector(unsigned int n, const FLOAT *val) {
             v_ = Matrix(1, n, val);
             n_ = n;
+        }
+
+        Vector(const Matrix &mat) {
+            assert(mat.m == 1);
+            v_ = mat;
+            n_ = mat.n;
         }
 
         Vector &operator=(const Vector &rhs) {
@@ -33,7 +39,6 @@ namespace mynt {
                 if(n_ != rhs.size())
                     n_ = rhs.size();
                 v_ = rhs.v_;
-                is_transposed_ = rhs.is_transposed_;
             }
             return *this;
         }
@@ -112,7 +117,6 @@ namespace mynt {
     private:
         Matrix v_;
         unsigned int n_;
-        bool is_transposed_;
     };
 }
 

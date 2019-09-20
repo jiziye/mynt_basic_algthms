@@ -89,7 +89,22 @@ namespace mynt {
             return Quarternion(a*sin(u2), a*cos(u2), b*sin(u3), b*cos(u3)).normalized();
         }
 
-        Matrix rotation_matrix();
+        /**
+         * @brief Convert a quaternion to the corresponding rotation matrix
+         * @note Pay attention to the convention used. The function follows the conversion in
+         *      "Indirect Kalman Filter for 3D Attitude Estimation: A Tutorial for Quaternion Algebra", Equation (78).
+         *
+         *       The input quaternion should be in the form [q1, q2, q3, q4(scalar)]^T
+         * @return
+         */
+        Matrix rotation_matrix() const;
+
+        Matrix left_product_matrix() const;
+
+        Quarternion operator*(const Quarternion &q) {
+            Vector v4 = this->left_product_matrix() * q.v4_;
+            return Quarternion(v4).normalized();
+        }
 
         friend std::ostream &operator<<(std::ostream &out, Quarternion q) {
 #if Q_HAMILTON

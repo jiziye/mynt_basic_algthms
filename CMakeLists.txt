@@ -31,6 +31,8 @@ target_link_libraries(mynt_maths ${Boost_LIBRARIES})
 ## computer vision
 
 ## kinematics
+add_library(mynt_kinematics SHARED src/kinematics/quarternion.cpp)
+target_link_libraries(mynt_kinematics mynt_maths)
 
 ## unit test
 if(BUILD_TEST)
@@ -61,7 +63,7 @@ if(BUILD_DOC)
     endif()
 endif()
 
-INSTALL(TARGETS mynt_maths
+INSTALL(TARGETS mynt_maths mynt_kinematics
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)

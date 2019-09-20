@@ -8,64 +8,95 @@
 #include <assert.h>
 #include <cmath>
 
-#include "maths/vector.h"
+#include "maths/math_basics.h"
 
 namespace mynt {
 
+#define Q_HAMILTON 0 // 0 for JPL, 1 for HAMILTON
+
     /**
-     * @brief Hamilton Quarternion, right-handed
+     * @brief Hamilton and JPL Quarternion
      */
     class Quarternion {
     public:
-        Quarternion() {
-            v4_ = Vector(4);
-            v4_[0] = 1.0;
-            v4_[1] = 0.0;
-            v4_[2] = 0.0;
-            v4_[3] = 0.0;
+        Quarternion();
+
+        Quarternion(FLOAT w, FLOAT x, FLOAT y, FLOAT z);
+
+        Quarternion(const Vector &v4);
+
+        FLOAT w() const {
+#if Q_HAMILTON
+            return v4_[0];
+#else
+            return v4_[3];
+#endif
         }
 
-        Quarternion(FLOAT w, FLOAT x, FLOAT y, FLOAT z) {
-            v4_ = Vector(4);
-            v4_[0] = w;
-            v4_[1] = x;
-            v4_[2] = y;
-            v4_[3] = z;
-            std::cout << "v4_: " << v4_ << std::endl;
+        FLOAT x() const {
+#if Q_HAMILTON
+            return v4_[1];
+#else
+            return v4_[0];
+#endif
         }
 
-        FLOAT w() { return v4_[0]; }
+        FLOAT y() const {
+#if Q_HAMILTON
+            return v4_[2];
+#else
+            return v4_[1];
+#endif
+        }
 
-        FLOAT x() { return v4_[1]; }
+        FLOAT z() const {
+#if Q_HAMILTON
+            return v4_[3];
+#else
+            return v4_[2];
+#endif
+        }
 
-        FLOAT y() { return v4_[2]; }
-
-        FLOAT z() { return v4_[3]; }
-
-        Quarternion(Vector v4) {
-            assert(v4.size() == 4);
-            v4_ = v4;
+        Vector vec() const {
+#if Q_HAMILTON
+            const Vector &q_vec = v4_.block(1, 3);
+            return q_vec;
+#else
+            const Vector &q_vec = v4_.block(0, 3);
+            return q_vec;
+#endif
         }
 
         /**
          * @brief quarternion normalize
          */
-        Quarternion normalized() {
+        inline Quarternion normalized() {
             FLOAT l2norm = v4_.norm();
             return this->v4_ / l2norm;
         }
 
+        /**
+         * @brief unit random quarternion, ref: http://planning.cs.uiuc.edu/node198.html
+         * @return
+         */
         static Quarternion unit_random() {
             double u1 = rand() / double(RAND_MAX); // [0, 1]
             double u2 = rand() / double(RAND_MAX) * M_2_PI;
             double u3 = rand() / double(RAND_MAX) * M_2_PI;
             double a = std::sqrt(1 - u1);
             double b = std::sqrt(u1);
+            // TODO: Hamilton ?
             return Quarternion(a*sin(u2), a*cos(u2), b*sin(u3), b*cos(u3)).normalized();
         }
 
+        Matrix rotation_matrix();
+
         friend std::ostream &operator<<(std::ostream &out, Quarternion q) {
+#if Q_HAMILTON
+            out << "[" << q.w() << ", " << q.x() << ", " << q.y() << ", " << q.z() << "]";
+#else
             out << "[" << q.x() << ", " << q.y() << ", " << q.z() << ", " << q.w() << "]";
+#endif
             return out;
         }
 

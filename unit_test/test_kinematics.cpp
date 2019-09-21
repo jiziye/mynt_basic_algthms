@@ -6,10 +6,10 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include "kinematics/quarternion.h"
+#include "kinematics/rotation_matrix.h"
 #include "math_utils.hpp"
 
-TEST(kinematics, quarternion)
+TEST(kinematics, Quarternion)
 {
     // mynt::Quarternion q(); // TODO: why
     mynt::Quarternion qa;
@@ -18,7 +18,7 @@ TEST(kinematics, quarternion)
 
     std::cout << "qa: " << qa << std::endl;
     std::cout << "qb: " << qb << std::endl;
-    std::cout << "qc: " << qc << std::endl;
+    std::cout << "qc: " << qc << endll;
 
     // rotation_matrix
     mynt::Matrix m_qb = qb.rotation_matrix();
@@ -26,12 +26,12 @@ TEST(kinematics, quarternion)
 
     Eigen::Vector4d v4b(qb.x(), qb.y(), qb.z(), qb.w());
     Eigen::Matrix3d mb = msckf::quaternionToRotation(v4b);
-    std::cout << "m_qb_02:\n" << mb << std::endl;
+    std::cout << "m_qb_02:\n" << mb << endll;
 
     // normalized
     std::cout << "qb  normalized: " << qb.normalized() << std::endl;
     msckf::quaternionNormalize(v4b);
-    std::cout << "v4b normalized: " << v4b.transpose() << std::endl;
+    std::cout << "v4b normalized: " << v4b.transpose() << endll;
 
     // q1 * q2
     Eigen::Vector4d v4c(qc.x(), qc.y(), qc.z(), qc.w());
@@ -40,7 +40,7 @@ TEST(kinematics, quarternion)
     std::cout << "qb * qc 01: " << q << std::endl;
 
     Eigen::Vector4d v4 = msckf::quaternionMultiplication(v4b, v4c);
-    std::cout << "qb * qc 02: " << v4.transpose() << std::endl;
+    std::cout << "qb * qc 02: " << v4.transpose() << endll;
 
     // small_angle_quaternion
     mynt::Vector v3_s = qc.vec();
@@ -52,5 +52,22 @@ TEST(kinematics, quarternion)
     v3_e[1] = v3_s[1];
     v3_e[2] = v3_s[2];
     v4 = msckf::smallAngleQuaternion(v3_e);
-    std::cout << "small q 02: " << v4.transpose() << std::endl;
+    std::cout << "small q 02: " << v4.transpose() << endll;
+}
+
+TEST(kinematics, RotationMatrix)
+{
+    // rotationToQuaternion
+    mynt::Quarternion qa = mynt::Quarternion::unit_random();
+    mynt::RotationMatrix m_qa = qa.rotation_matrix();
+
+    mynt::Quarternion q01 = m_qa.quarternion();
+    std::cout << "q01: " << q01 << std::endl;
+
+    Eigen::Matrix3d m3;
+    for(int i=0; i<3; ++i)
+        for(int j=0; j<3; ++j)
+            m3(i,j) = m_qa(i,j);
+    Eigen::Vector4d q02 = msckf::rotationToQuaternion(m3);
+    std::cout << "q02: " << q02.transpose() << endll;
 }

@@ -190,42 +190,6 @@ namespace mynt {
         return M2;
     }
 
-    Matrix Matrix::rotMatX(const FLOAT &angle) {
-        FLOAT s = sin(angle);
-        FLOAT c = cos(angle);
-        Matrix R(3, 3);
-        R.val[0][0] = +1;
-        R.val[1][1] = +c;
-        R.val[1][2] = -s;
-        R.val[2][1] = +s;
-        R.val[2][2] = +c;
-        return R;
-    }
-
-    Matrix Matrix::rotMatY(const FLOAT &angle) {
-        FLOAT s = sin(angle);
-        FLOAT c = cos(angle);
-        Matrix R(3, 3);
-        R.val[0][0] = +c;
-        R.val[0][2] = +s;
-        R.val[1][1] = +1;
-        R.val[2][0] = -s;
-        R.val[2][2] = +c;
-        return R;
-    }
-
-    Matrix Matrix::rotMatZ(const FLOAT &angle) {
-        FLOAT s = sin(angle);
-        FLOAT c = cos(angle);
-        Matrix R(3, 3);
-        R.val[0][0] = +c;
-        R.val[0][1] = -s;
-        R.val[1][0] = +s;
-        R.val[1][1] = +c;
-        R.val[2][2] = +1;
-        return R;
-    }
-
     Matrix Matrix::operator+(const Matrix &M) {
         const Matrix &A = *this;
         const Matrix &B = M;

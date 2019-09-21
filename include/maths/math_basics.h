@@ -5,19 +5,11 @@
 #ifndef MYNT_BASIC_ALGTHMS_MATH_BASICS_H
 #define MYNT_BASIC_ALGTHMS_MATH_BASICS_H
 
-#include <cmath>
-#include <random>
-
 #include "maths/vector.h"
 
 namespace mynt {
 
-    inline int uniform_integer(int min, int max) {
-        std::random_device rd;  //Will be used to obtain a seed for the random number engine
-        std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-        std::uniform_int_distribution<> dis(min, max);
-        return dis(gen);
-    }
+    int uniform_integer(int min, int max);
 
     /**
      * @brief Create a skew-symmetric matrix from a 3-element vector.
@@ -28,19 +20,7 @@ namespace mynt {
      *          [-w2  w1   0]
      * @return
      */
-    inline Matrix skew_symmetric(const Vector &w) {
-        Matrix w_hat(3, 3);
-        w_hat(0, 0) =  0;
-        w_hat(0, 1) = -w[2];
-        w_hat(0, 2) =  w[1];
-        w_hat(1, 0) =  w[2];
-        w_hat(1, 1) =  0;
-        w_hat(1, 2) = -w[0];
-        w_hat(2, 0) = -w[1];
-        w_hat(2, 1) =  w[0];
-        w_hat(2, 2) =  0;
-        return w_hat;
-    }
+    Matrix skew_symmetric(const Vector &w);
 
     /**
      * @brief s * M
@@ -48,7 +28,7 @@ namespace mynt {
      * @param M
      * @return
      */
-    Matrix operator*(FLOAT s, Matrix M) { return M * s; }
+    Matrix operator*(FLOAT s, Matrix M);
 
     /**
      * @brief s * V
@@ -56,7 +36,7 @@ namespace mynt {
      * @param V
      * @return
      */
-    Vector operator*(FLOAT s, Vector V) { return V * s; }
+    Vector operator*(FLOAT s, Vector V);
 
     /**
      * @brief M * V
@@ -64,17 +44,7 @@ namespace mynt {
      * @param V
      * @return
      */
-    Vector operator*(const Matrix &M, const Vector &V) {
-        assert(M.n == V.size());
-        Vector v(M.m);
-        for(int i=0; i<M.m; ++i) {
-            FLOAT sum_i = 0.0;
-            for(int j=0; j<M.n; ++j)
-                sum_i += M(i,j) * V[j];
-            v[i] = sum_i;
-        }
-        return v;
-    }
+    Vector operator*(const Matrix &M, const Vector &V);
 }
 
 #endif //MYNT_BASIC_ALGTHMS_MATH_BASICS_H

@@ -9,7 +9,7 @@ namespace mynt {
 
 #define DELETE_NEW_OBJ(obj) if(nullptr!=obj){delete obj;obj=nullptr;}
 
-#define endll endl << endl // double end line definition
+#define endll std::endl << std::endl // double end line definition
 
 #ifndef _MSC_VER
 #include <stdint.h>

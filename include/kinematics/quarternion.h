@@ -140,6 +140,13 @@ namespace mynt {
 
         Matrix left_product_matrix() const;
 
+        FLOAT &operator[](int n) { return v4_[n]; }
+
+        const Quarternion &operator-() {
+            v4_ = -v4_;
+            return (*this);
+        }
+
         Quarternion operator*(const Quarternion &q) {
             Vector v4 = this->left_product_matrix() * q.v4_;
             return Quarternion(v4).normalized();

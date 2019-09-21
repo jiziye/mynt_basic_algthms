@@ -7,6 +7,8 @@
 
 #include "matrix.h"
 
+#include <assert.h>
+
 namespace mynt {
 
     /**
@@ -45,9 +47,14 @@ namespace mynt {
 
         FLOAT &operator[](int n) { return v_(0, n); }
 
-        FLOAT &operator[](int n) const { return v_(0, n); }
+        const FLOAT &operator[](int n) const { return v_(0, n); }
 
         inline unsigned int size() const { return n_; }
+
+        Vector operator-() {
+            v_ = -v_;
+            return (*this);
+        }
 
         Vector operator+(const Vector &rhs) {
             Vector v;
@@ -100,6 +107,18 @@ namespace mynt {
             for(int i=0; i<n; ++i)
                 v[i] = (*this)[idx+i];
             return v;
+        }
+
+        inline FLOAT max_coeff(int &i_max) {
+            FLOAT max = 0.0;
+            i_max = 0;
+            for(int i=0; i<size(); ++i) {
+                if((*this)[i]>max) {
+                    max = (*this)[i];
+                    i_max = i;
+                }
+            }
+            return max;
         }
 
         friend std::ostream &operator<<(std::ostream &out, Vector &v) {

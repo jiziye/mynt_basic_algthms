@@ -59,13 +59,6 @@ namespace mynt {
         // returns the m-by-n matrix whose elements are taken column-wise from M
         static Matrix reshape(const Matrix &M, int32_t m, int32_t n);
 
-        // create 3x3 rotation matrices (convention: http://en.wikipedia.org/wiki/Rotation_matrix)
-        static Matrix rotMatX(const FLOAT &angle);
-
-        static Matrix rotMatY(const FLOAT &angle);
-
-        static Matrix rotMatZ(const FLOAT &angle);
-
         // simple arithmetic operations
         Matrix operator+(const Matrix &M); // add matrix
         Matrix operator-(const Matrix &M); // subtract matrix

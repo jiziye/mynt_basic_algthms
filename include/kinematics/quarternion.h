@@ -25,7 +25,7 @@ namespace mynt {
 
         Quarternion(const Vector &v4);
 
-        FLOAT w() const {
+        const FLOAT w() const {
 #if Q_HAMILTON
             return v4_[0];
 #else
@@ -33,7 +33,15 @@ namespace mynt {
 #endif
         }
 
-        FLOAT x() const {
+        FLOAT &w() {
+#if Q_HAMILTON
+            return v4_[0];
+#else
+            return v4_[3];
+#endif
+        }
+
+        const FLOAT x() const {
 #if Q_HAMILTON
             return v4_[1];
 #else
@@ -41,7 +49,15 @@ namespace mynt {
 #endif
         }
 
-        FLOAT y() const {
+        FLOAT &x() {
+#if Q_HAMILTON
+            return v4_[1];
+#else
+            return v4_[0];
+#endif
+        }
+
+        const FLOAT y() const {
 #if Q_HAMILTON
             return v4_[2];
 #else
@@ -49,7 +65,15 @@ namespace mynt {
 #endif
         }
 
-        FLOAT z() const {
+        FLOAT &y() {
+#if Q_HAMILTON
+            return v4_[2];
+#else
+            return v4_[1];
+#endif
+        }
+
+        const FLOAT z() const {
 #if Q_HAMILTON
             return v4_[3];
 #else
@@ -57,18 +81,31 @@ namespace mynt {
 #endif
         }
 
-        Vector vec() const {
+        FLOAT &z() {
 #if Q_HAMILTON
-            const Vector &q_vec = v4_.block(1, 3);
-            return q_vec;
+            return v4_[3];
 #else
-            const Vector &q_vec = v4_.block(0, 3);
-            return q_vec;
+            return v4_[2];
 #endif
+        }
+
+        const Vector vec() const {
+#if Q_HAMILTON
+            return v4_.block(1, 3);
+#else
+            return v4_.block(0, 3);
+#endif
+        }
+
+        inline void set_vec(const Vector &v3) {
+            assert(v3.size() == 3);
+            x() = v3[0];
+            y() = v3[1];
+            z() = v3[2];
         }
 
         /**
-         * @brief quarternion normalize
+         * @brief Normalize the given quaternion to unit quaternion
          */
         inline Quarternion normalized() {
             FLOAT l2norm = v4_.norm();
@@ -79,15 +116,17 @@ namespace mynt {
          * @brief unit random quarternion, ref: http://planning.cs.uiuc.edu/node198.html
          * @return
          */
-        static Quarternion unit_random() {
-            double u1 = rand() / double(RAND_MAX); // [0, 1]
-            double u2 = rand() / double(RAND_MAX) * M_2_PI;
-            double u3 = rand() / double(RAND_MAX) * M_2_PI;
-            double a = std::sqrt(1 - u1);
-            double b = std::sqrt(u1);
-            // TODO: Hamilton ?
-            return Quarternion(a*sin(u2), a*cos(u2), b*sin(u3), b*cos(u3)).normalized();
-        }
+        static Quarternion unit_random();
+
+        /**
+         * @brief Convert the vector part of a quaternion to a full quaternion.
+         * @note This function is useful to convert delta quaternion which is usually a 3x1 vector to a full quaternion.
+         *       For more details, check Section 3.2 "Kalman Filter Update" in
+         *       "Indirect Kalman Filter for 3D Attitude Estimation: A Tutorial for quaternion Algebra".
+         * @param v3
+         * @return
+         */
+        static Quarternion small_angle_quaternion(const Vector &v3);
 
         /**
          * @brief Convert a quaternion to the corresponding rotation matrix
@@ -104,6 +143,12 @@ namespace mynt {
         Quarternion operator*(const Quarternion &q) {
             Vector v4 = this->left_product_matrix() * q.v4_;
             return Quarternion(v4).normalized();
+        }
+
+        Quarternion operator/(const FLOAT &s) {
+            Quarternion q;
+            q.v4_ = this->v4_ / s;
+            return q;
         }
 
         friend std::ostream &operator<<(std::ostream &out, Quarternion q) {

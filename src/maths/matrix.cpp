@@ -315,7 +315,7 @@ namespace mynt {
         }
     }
 
-    Matrix Matrix::operator/(const FLOAT &s) {
+    Matrix Matrix::operator/(const FLOAT &s) const {
         if (fabs(s) < 1e-20) {
             cerr << "ERROR: Trying to divide by zero!" << endl;
             exit(0);

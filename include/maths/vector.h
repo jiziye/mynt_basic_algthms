@@ -70,7 +70,7 @@ namespace mynt {
             return v;
         }
 
-        Matrix operator*(const Vector &v) {
+        Matrix operator*(const Vector &v) const {
             int n = v.size();
             Matrix m(n, n);
             for (int i = 0; i < n; ++i)
@@ -79,7 +79,7 @@ namespace mynt {
             return m;
         }
 
-        Vector operator/(const FLOAT &m) {
+        Vector operator/(const FLOAT &m) const {
             Vector v;
             v.v_ = v_ / m;
             v.n_ = n_;

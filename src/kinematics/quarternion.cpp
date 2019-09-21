@@ -41,6 +41,31 @@ namespace mynt {
         v4_ = v4;
     }
 
+    Quarternion Quarternion::unit_random() {
+        double u1 = rand() / double(RAND_MAX); // [0, 1]
+        double u2 = rand() / double(RAND_MAX) * M_2_PI;
+        double u3 = rand() / double(RAND_MAX) * M_2_PI;
+        double a = std::sqrt(1 - u1);
+        double b = std::sqrt(u1);
+        // TODO: Hamilton ?
+        return Quarternion(a*sin(u2), a*cos(u2), b*sin(u3), b*cos(u3)).normalized();
+    }
+
+    Quarternion Quarternion::small_angle_quaternion(const Vector &v3) {
+        Vector dq = v3 / 2.0;
+        Quarternion q;
+        double dq_square_norm = std::pow(dq.norm(), 2);
+        if (dq_square_norm <= 1) {
+            q.set_vec(dq);
+            q.w() = std::sqrt(1 - dq_square_norm);
+        } else {
+            q.set_vec(dq);
+            q.w() = 1;
+            q = q / std::sqrt(1 + dq_square_norm);
+        }
+        return q;
+    }
+
     Matrix Quarternion::rotation_matrix() const {
         Matrix R(3, 3);
 #if Q_HAMILTON

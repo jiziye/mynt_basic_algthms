@@ -72,7 +72,7 @@ namespace mynt {
         Matrix operator*(const Matrix &M) const; // multiply with matrix
         Matrix operator*(const FLOAT &s);  // multiply with scalar
         Matrix operator/(const Matrix &M); // divide elementwise by matrix (or vector)
-        Matrix operator/(const FLOAT &s);  // divide by scalar
+        Matrix operator/(const FLOAT &s) const;  // divide by scalar
         Matrix operator-();                // negative matrix
         Matrix operator~();                // transpose
         FLOAT l2norm();                    // euclidean norm (vectors) / frobenius norm (matrices)

@@ -9,14 +9,11 @@
 
 namespace mynt {
 
-    RotationMatrix::RotationMatrix() {
-        mat_ = eye(3);
-    }
+    RotationMatrix::RotationMatrix() : Matrix(3,3) {}
 
-    RotationMatrix::RotationMatrix(const Matrix &mat) {
+    RotationMatrix::RotationMatrix(const Matrix &mat) : Matrix(mat) {
         // TODO: det == 1, RRT == I
         assert(mat.m == 3 && mat.n == 3);
-        mat_ = mat;
     }
 
     RotationMatrix RotationMatrix::rot_mat_x(const FLOAT &angle) {
@@ -61,7 +58,7 @@ namespace mynt {
         // TODO
 #else
         RotationMatrix R = *this;
-        Vector score(4);
+        Vector<4> score;
         score[0] = R(0, 0);
         score[1] = R(1, 1);
         score[2] = R(2, 2);

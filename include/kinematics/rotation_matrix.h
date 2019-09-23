@@ -18,7 +18,7 @@ namespace mynt {
         inline const FLOAT trace() const {
             FLOAT tr = 0.0;
             for(int i=0; i<3; ++i)
-                tr += mat_(i, i);
+                tr += (*this)(i, i);
             return tr;
         }
 
@@ -36,9 +36,6 @@ namespace mynt {
          * @return
          */
         const Quarternion quarternion() const;
-
-    private:
-        Matrix mat_;
     };
 }
 

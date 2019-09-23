@@ -69,6 +69,83 @@ namespace mynt {
             return width * height;
         }
     };
+
+
+    template <typename _T>
+    struct Point2D { 
+        _T x;
+        _T y;
+  
+        Point2D() { x=y=0;}
+        
+        Point2D(_T _x, _T _y) : x(_x), y(_y) {}
+        
+        Point2D(const Point2D &p) : x(p.x), y(p.y) {}
+ 
+        bool operator==(const Point2D &rhs) const {
+            return  x == rhs.x && y == rhs.y;
+        }
+        
+        bool operator!=(const Point2D &rhs) const {
+            return x != rhs.x || y != rhs.y;
+        }
+
+        Point2D &operator=(const Point2D &rhs) {
+            if(this == &rhs)
+                return *this;
+            x = rhs.x;
+            y = rhs.y;
+            return *this;
+        }
+ 
+        Point2D operator+(const Point2D &rhs) const {
+            Point2D p;
+            p.x = this->x + rhs.x;
+            p.y = this->y + rhs.y;
+            return p;
+        }
+
+        Point2D operator-(const Point2D &rhs) const {
+            Point2D p;
+            p.x = this->x - rhs.x;
+            p.y = this->y - rhs.y;
+            return p;
+        }
+
+        Point2D operator-() {
+            Point2D p;
+            p.x = -this->x;
+            p.y = -this->y;
+            return p;
+        }
+    
+        Point2D operator*(int n) const {
+            Point2D p;
+            p.x = this->x * n;
+            p.y = this->y * n;
+            return p;
+        }
+
+
+        Point2D operator/(int n) const {
+            Point2D p;
+            p.x = this->x / n;
+            p.y = this->y /n;
+            return p;
+        }
+
+        friend std::ostream &operator<<(std::ostream &os, const Point2D &p){
+            return os << "("<<p.x<<","<<p.y<<")";
+        }
+
+    };
+
+    typedef Point2D<float> Point2f;
+    typedef Point2D<int>   Point2i;
+
+    mynt::Point2f operator*(int n, const mynt::Point2f &pt) {
+        return pt * n;         
+    }
 }
 
 #endif //MYNT_BASIC_ALGTHMS_TYPES_H

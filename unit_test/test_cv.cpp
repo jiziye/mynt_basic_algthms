@@ -22,9 +22,26 @@ TEST(cv, Size)
     std::cout << "szc: " << szc << ", area: " << szc.area() << std::endl;
 }
 
+TEST(cv, Point2D)
+{
+    mynt::Point2i p;
+    std::cout<< "p: " << p <<std::endl;
+   
+    const int n=2; 
+    mynt::Point2f a(100,100);
+    mynt::Point2f b(200,200);
+    mynt::Point2f c = a * n;
+    c = 3 * a;
+    c = -c;
+    std::cout<<a<<"*"<<n<<" = "<<c<<std::endl;
+
+    mynt::Point2f d = a + b;
+    std::cout<<a<<"+"<<b<<" = "<<d<<std::endl;
+}
+
 TEST(YImg, copy)
 {
-    cv::Mat mat_src = cv::imread("../../data/lena.bmp", cv::ImreadModes::IMREAD_GRAYSCALE);
+    cv::Mat mat_src = cv::imread("../data/lena.bmp", cv::ImreadModes::IMREAD_GRAYSCALE);
 
     ASSERT_FALSE(mat_src.empty());
 

@@ -20,7 +20,7 @@ namespace mynt {
      *          [-w2  w1   0]
      * @return
      */
-    Matrix skew_symmetric(const Vector &w);
+    Matrix skew_symmetric(const Vector<3> &w);
 
     /**
      * @brief s * M
@@ -36,7 +36,8 @@ namespace mynt {
      * @param V
      * @return
      */
-    Vector operator*(FLOAT s, Vector V);
+    template<unsigned int _M>
+    Vector<_M> operator*(FLOAT s, Vector<_M> V)  { return V * s; }
 
     /**
      * @brief M * V
@@ -44,7 +45,18 @@ namespace mynt {
      * @param V
      * @return
      */
-    Vector operator*(const Matrix &M, const Vector &V);
+    template<unsigned int _M, unsigned int _N>
+    static Vector<_M> operator*(const Matrix &M, const Vector<_N> &V) {
+        assert(M.n == V.size() && M.m == _M);
+        Vector<_M> v;
+        for(int i=0; i<M.m; ++i) {
+            FLOAT sum_i = 0.0;
+            for(int j=0; j<M.n; ++j)
+                sum_i += M(i,j) * V[j];
+            v[i] = sum_i;
+        }
+        return v;
+    }
 }
 
 #endif //MYNT_BASIC_ALGTHMS_MATH_BASICS_H

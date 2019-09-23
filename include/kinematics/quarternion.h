@@ -23,7 +23,7 @@ namespace mynt {
 
         Quarternion(FLOAT w, FLOAT x, FLOAT y, FLOAT z);
 
-        Quarternion(const Vector &v4);
+        Quarternion(const Vector<4> &v4);
 
         const FLOAT w() const {
 #if Q_HAMILTON
@@ -89,15 +89,15 @@ namespace mynt {
 #endif
         }
 
-        const Vector vec() const {
+        const Vector<3> vec() const {
 #if Q_HAMILTON
-            return v4_.block(1, 3);
+            return v4_.block<3>(1);
 #else
-            return v4_.block(0, 3);
+            return v4_.block<3>(0);
 #endif
         }
 
-        inline void set_vec(const Vector &v3) {
+        inline void set_vec(const Vector<3> &v3) {
             assert(v3.size() == 3);
             x() = v3[0];
             y() = v3[1];
@@ -126,7 +126,7 @@ namespace mynt {
          * @param v3
          * @return
          */
-        static Quarternion small_angle_quaternion(const Vector &v3);
+        static Quarternion small_angle_quaternion(const Vector<3> &v3);
 
         /**
          * @brief Convert a quaternion to the corresponding rotation matrix
@@ -148,7 +148,7 @@ namespace mynt {
         }
 
         Quarternion operator*(const Quarternion &q) {
-            Vector v4 = this->left_product_matrix() * q.v4_;
+            Vector<4> v4 = mynt::template operator*<4,4>(this->left_product_matrix(), q.v4_);
             return Quarternion(v4).normalized();
         }
 
@@ -168,7 +168,7 @@ namespace mynt {
         }
 
     private:
-        Vector v4_;
+        Vector<4> v4_;
     };
 }
 

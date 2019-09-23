@@ -26,14 +26,14 @@ TEST(maths, Matrix)
 TEST(maths, Vector)
 {
     mynt::FLOAT val[] = {1,2,3,4,5};
-    mynt::Vector va = mynt::Vector(5, val);
+    mynt::Vector<5> va = mynt::Vector<5>(val);
 
     va[1] = 10;
 
-    mynt::Vector vb = va/2.0;
-    mynt::Vector vc = va + vb;
+    mynt::Vector<5> vb = va/2.0;
+    mynt::Vector<5> vc = va + vb;
 
-    mynt::Vector vd = va.block(1, 3);
+    mynt::Vector<3> vd = va.block<3>(1);
 
     std::cout << "va: " << va << std::endl;
     std::cout << "vb: " << vb << std::endl;
@@ -49,7 +49,7 @@ TEST(maths, Vector)
 TEST(maths, math_basic)
 {
     mynt::FLOAT val[] = {1,2,3};
-    mynt::Vector va = mynt::Vector(3, val);
+    mynt::Vector<3> va = mynt::Vector<3>(val);
     mynt::Matrix ma = mynt::skew_symmetric(va);
     std::cout << "skew_symmetric ma: \n" << ma << std::endl;
 }

@@ -43,7 +43,7 @@ TEST(kinematics, Quarternion)
     std::cout << "qb * qc 02: " << v4.transpose() << endll;
 
     // small_angle_quaternion
-    mynt::Vector v3_s = qc.vec();
+    mynt::Vector<3> v3_s = qc.vec();
     q = mynt::Quarternion::small_angle_quaternion(v3_s);
     std::cout << "small q 01: " << q << std::endl;
 
@@ -60,6 +60,8 @@ TEST(kinematics, RotationMatrix)
     // rotationToQuaternion
     mynt::Quarternion qa = mynt::Quarternion::unit_random();
     mynt::RotationMatrix m_qa = qa.rotation_matrix();
+
+    std::cout << "m_qa:\n" << m_qa << std::endl;
 
     mynt::Quarternion q01 = m_qa.quarternion();
     std::cout << "q01: " << q01 << std::endl;

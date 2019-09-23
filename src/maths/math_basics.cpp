@@ -25,7 +25,7 @@ namespace mynt {
      *          [-w2  w1   0]
      * @return
      */
-    Matrix skew_symmetric(const Vector &w) {
+    Matrix skew_symmetric(const Vector<3> &w) {
         Matrix w_hat(3, 3);
         w_hat(0, 0) =  0;
         w_hat(0, 1) = -w[2];
@@ -46,30 +46,4 @@ namespace mynt {
      * @return
      */
     Matrix operator*(FLOAT s, Matrix M) { return M * s; }
-
-    /**
-     * @brief s * V
-     * @param s
-     * @param V
-     * @return
-     */
-    Vector operator*(FLOAT s, Vector V) { return V * s; }
-
-    /**
-     * @brief M * V
-     * @param M
-     * @param V
-     * @return
-     */
-    Vector operator*(const Matrix &M, const Vector &V) {
-        assert(M.n == V.size());
-        Vector v(M.m);
-        for(int i=0; i<M.m; ++i) {
-            FLOAT sum_i = 0.0;
-            for(int j=0; j<M.n; ++j)
-                sum_i += M(i,j) * V[j];
-            v[i] = sum_i;
-        }
-        return v;
-    }
 }

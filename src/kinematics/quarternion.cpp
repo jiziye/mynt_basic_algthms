@@ -7,7 +7,6 @@
 namespace mynt {
 
     Quarternion::Quarternion() {
-        v4_ = Vector(4);
 #if Q_HAMILTON
         v4_[0] = 1.0;
         v4_[1] = 0.0;
@@ -22,7 +21,6 @@ namespace mynt {
     }
 
     Quarternion::Quarternion(FLOAT w, FLOAT x, FLOAT y, FLOAT z) {
-        v4_ = Vector(4);
 #if Q_HAMILTON
         v4_[0] = w;
         v4_[1] = x;
@@ -36,7 +34,7 @@ namespace mynt {
 #endif
     }
 
-    Quarternion::Quarternion(const Vector &v4) {
+    Quarternion::Quarternion(const Vector<4> &v4) {
         assert(v4.size() == 4);
         v4_ = v4;
     }
@@ -51,8 +49,8 @@ namespace mynt {
         return Quarternion(a*sin(u2), a*cos(u2), b*sin(u3), b*cos(u3)).normalized();
     }
 
-    Quarternion Quarternion::small_angle_quaternion(const Vector &v3) {
-        Vector dq = v3 / 2.0;
+    Quarternion Quarternion::small_angle_quaternion(const Vector<3> &v3) {
+        Vector<3> dq = v3 / 2.0;
         Quarternion q;
         double dq_square_norm = std::pow(dq.norm(), 2);
         if (dq_square_norm <= 1) {

@@ -15,57 +15,26 @@ namespace mynt {
      * @brief column vector
      */
     template<unsigned int _N>
-    class Vector {
+    class Vector : public Matrix {
     public:
-        Vector() {
-            v_ = Matrix(1, _N);
-        }
+        Vector() : Matrix(1, _N) {}
 
-        Vector(const FLOAT *val) {
-            v_ = Matrix(1, _N, val);
-        }
+        Vector(const FLOAT *val) : Matrix(1, _N, val) {}
 
-        Vector(const Matrix &mat) {
+        Vector(const Matrix &mat) : Matrix(mat) {
             assert(mat.m == 1 && mat.n == _N);
-            v_ = mat;
         }
 
-        Vector &operator=(const Vector &rhs) {
-            if(this != &rhs) {
-                assert(rhs.size() == _N);
-                v_ = rhs.v_;
-            }
-            return *this;
-        }
+        FLOAT &operator[](int idx) { return (*this)(0, idx); }
 
-        FLOAT &operator[](int idx) { return v_(0, idx); }
-
-        const FLOAT &operator[](int idx) const { return v_(0, idx); }
+        const FLOAT &operator[](int idx) const { return (*this)(0, idx); }
 
         inline unsigned int size() const { return _N; }
 
-        Vector operator-() {
-            v_ = -v_;
-            return (*this);
-        }
-
-        Vector operator+(const Vector &rhs) {
-            assert(_N == rhs.size());
-            Vector v;
-            v.v_ = v_ + rhs.v_;
-            return v;
-        }
-
-        Vector operator-(const Vector &rhs) {
-            assert(_N == rhs.size());
-            Vector v;
-            v.v_ = v_ - rhs.v_;
-            return v;
-        }
-
         Vector operator*(const FLOAT &m) {
             Vector v;
-            v.v_ = v_ * m;
+            for(int i=0; i<this->size(); ++i)
+                v[i] = (*this)[i] * m;
             return v;
         }
 
@@ -81,11 +50,12 @@ namespace mynt {
 
         Vector operator/(const FLOAT &m) const {
             Vector v;
-            v.v_ = v_ / m;
+            for(int i=0; i<this->size(); ++i)
+                v[i] = (*this)[i] / m;
             return v;
         }
 
-        inline FLOAT norm() { return v_.l2norm(); }
+        inline FLOAT norm() { return this->l2norm(); }
 
         inline FLOAT dot(const Vector &v) {
             assert(_N == v.size());
@@ -128,9 +98,6 @@ namespace mynt {
             }
             return out;
         }
-
-    private:
-        Matrix v_;
     };
 }
 

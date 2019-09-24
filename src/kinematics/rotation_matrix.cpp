@@ -9,7 +9,7 @@
 
 namespace mynt {
 
-    RotationMatrix::RotationMatrix() : Matrix(3,3) {}
+    RotationMatrix::RotationMatrix() : Matrix(Matrix::eye(3)) {}
 
     RotationMatrix::RotationMatrix(const Matrix &mat) : Matrix(mat) {
         // TODO: det == 1, RRT == I
@@ -94,5 +94,16 @@ namespace mynt {
         q.normalized();
 #endif
         return q;
+    }
+
+    RotationMatrix rodrigues(const Vector3 &v3) {
+        FLOAT theta = v3.l2norm();
+        Vector3 v3_hat = v3 / theta;
+        RotationMatrix I;
+        FLOAT c1 = std::cos(theta);
+        FLOAT s1 = std::sin(theta);
+        Matrix v3_skew = mynt::skew_symmetric(v3_hat);
+        RotationMatrix R = c1 * I + (1-c1) * v3_hat * v3_hat.transpose() + s1 * v3_skew;
+        return R;
     }
 }

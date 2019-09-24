@@ -307,7 +307,7 @@ namespace mynt {
         return C;
     }
 
-    FLOAT Matrix::l2norm() {
+    FLOAT Matrix::l2norm() const {
         FLOAT norm = 0;
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)

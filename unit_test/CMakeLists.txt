@@ -22,4 +22,4 @@ target_link_libraries(test_cv ${OpenCV_LIBS})
 
 ## kinematics
 add_executable(test_kinematics gtest_main.cpp test_kinematics.cpp)
-target_link_libraries(test_kinematics mynt_kinematics)
+target_link_libraries(test_kinematics mynt_kinematics ${OpenCV_LIBS})

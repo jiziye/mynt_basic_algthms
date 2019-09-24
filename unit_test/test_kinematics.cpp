@@ -6,6 +6,8 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <opencv2/calib3d/calib3d.hpp>
+
 #include "kinematics/rotation_matrix.h"
 #include "math_utils.hpp"
 
@@ -72,4 +74,18 @@ TEST(kinematics, RotationMatrix)
             m3(i,j) = m_qa(i,j);
     Eigen::Vector4d q02 = msckf::rotationToQuaternion(m3);
     std::cout << "q02: " << q02.transpose() << endll;
+}
+
+TEST(kinematics, Convertor)
+{
+    mynt::FLOAT val[3] = {0.04345, -0.05236, -0.01810};
+    mynt::Vector3 v3(val);
+    mynt::RotationMatrix R01 = mynt::rodrigues(v3);
+    std::cout << "R 01:\n" << R01 << std::endl;
+
+    //    cv::Mat_<float> invec = (cv::Mat_<float>(3, 1) << 0.04345, -0.05236, -0.01810);
+    cv::Vec3f invec(0.04345, -0.05236, -0.01810);
+    cv::Mat R02;
+    cv::Rodrigues(invec, R02);
+    std::cout << "R 02:\n" << R02 << std::endl;
 }

@@ -52,7 +52,7 @@ namespace mynt {
     Quarternion Quarternion::small_angle_quaternion(const Vector<3> &v3) {
         Vector<3> dq = v3 / 2.0;
         Quarternion q;
-        double dq_square_norm = std::pow(dq.norm(), 2);
+        double dq_square_norm = std::pow(dq.l2norm(), 2);
         if (dq_square_norm <= 1) {
             q.set_vec(dq);
             q.w() = std::sqrt(1 - dq_square_norm);
@@ -69,7 +69,7 @@ namespace mynt {
 #if Q_HAMILTON
         // TODO
 #else
-        R = (2 * w() * w() - 1) * Matrix::eye(3) - 2 * w() * skew_symmetric(vec()) + 2 * vec() * vec();
+        R = (2 * w() * w() - 1) * Matrix::eye(3) - 2 * w() * skew_symmetric(vec()) + 2 * vec() * vec().transpose();
         //TODO: Is it necessary to use the approximation equation (Equation (87)) when the rotation angle is small?
 #endif
         return R;

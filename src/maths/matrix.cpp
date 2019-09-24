@@ -22,11 +22,11 @@ namespace mynt {
     }
 
     Matrix::Matrix(const int32_t m_, const int32_t n_) {
-        allocateMemory(m_, n_);
+        allocate_memory(m_, n_);
     }
 
     Matrix::Matrix(const int32_t m_, const int32_t n_, const FLOAT *val_) {
-        allocateMemory(m_, n_);
+        allocate_memory(m_, n_);
         int32_t k = 0;
         for (int32_t i = 0; i < m_; i++)
             for (int32_t j = 0; j < n_; j++)
@@ -34,20 +34,20 @@ namespace mynt {
     }
 
     Matrix::Matrix(const Matrix &M) {
-        allocateMemory(M.m, M.n);
+        allocate_memory(M.m, M.n);
         for (int32_t i = 0; i < M.m; i++)
             memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
     }
 
     Matrix::~Matrix() {
-        releaseMemory();
+        release_memory();
     }
 
     Matrix &Matrix::operator=(const Matrix &M) {
         if (this != &M) {
             if (M.m != m || M.n != n) {
-                releaseMemory();
-                allocateMemory(M.m, M.n);
+                release_memory();
+                allocate_memory(M.m, M.n);
             }
             if (M.n > 0)
                 for (int32_t i = 0; i < M.m; i++)
@@ -74,7 +74,7 @@ namespace mynt {
         return val[i_][j_];
     }
 
-    void Matrix::getData(FLOAT *val_, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
+    void Matrix::get_data(FLOAT *val_, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
         if (i2 == -1) i2 = m - 1;
         if (j2 == -1) j2 = n - 1;
         int32_t k = 0;
@@ -83,7 +83,7 @@ namespace mynt {
                 val_[k++] = val[i][j];
     }
 
-    Matrix Matrix::getMat(int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
+    Matrix Matrix::get_mat(int32_t i1, int32_t j1, int32_t i2, int32_t j2) const {
         if (i2 == -1) i2 = m - 1;
         if (j2 == -1) j2 = n - 1;
         if (i1 < 0 || i2 >= m || j1 < 0 || j2 >= n || i2 < i1 || j2 < j1) {
@@ -99,7 +99,7 @@ namespace mynt {
         return M;
     }
 
-    void Matrix::setMat(const Matrix &M, const int32_t i1, const int32_t j1) {
+    void Matrix::set_mat(const Matrix &M, const int32_t i1, const int32_t j1) {
         if (i1 < 0 || j1 < 0 || i1 + M.m > m || j1 + M.n > n) {
             cerr << "ERROR: Cannot set submatrix [" << i1 << ".." << i1 + M.m - 1 <<
                  "] x [" << j1 << ".." << j1 + M.n - 1 << "]" <<
@@ -111,7 +111,7 @@ namespace mynt {
                 val[i1 + i][j1 + j] = M.val[i][j];
     }
 
-    void Matrix::setVal(FLOAT s, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
+    void Matrix::set_val(FLOAT s, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
         if (i2 == -1) i2 = m - 1;
         if (j2 == -1) j2 = n - 1;
         if (i2 < i1 || j2 < j1) {
@@ -123,17 +123,17 @@ namespace mynt {
                 val[i][j] = s;
     }
 
-    void Matrix::setDiag(FLOAT s, int32_t i1, int32_t i2) {
+    void Matrix::set_diag(FLOAT s, int32_t i1, int32_t i2) {
         if (i2 == -1) i2 = min(m - 1, n - 1);
         for (int32_t i = i1; i <= i2; i++)
             val[i][i] = s;
     }
 
     void Matrix::zero() {
-        setVal(0);
+        set_val(0);
     }
 
-    Matrix Matrix::extractCols(vector<int> idx) {
+    Matrix Matrix::extract_cols(vector<int> idx) {
         Matrix M(m, idx.size());
         for (int32_t j = 0; j < M.n; j++)
             if (idx[j] < n)
@@ -190,7 +190,7 @@ namespace mynt {
         return M2;
     }
 
-    Matrix Matrix::operator+(const Matrix &M) {
+    Matrix Matrix::operator+(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
         if (A.m != B.m || A.n != B.n) {
@@ -205,7 +205,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator-(const Matrix &M) {
+    Matrix Matrix::operator-(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
         if (A.m != B.m || A.n != B.n) {
@@ -236,7 +236,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator*(const FLOAT &s) {
+    Matrix Matrix::operator*(const FLOAT &s) const {
         Matrix C(m, n);
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)
@@ -244,7 +244,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator/(const Matrix &M) {
+    Matrix Matrix::operator/(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
 
@@ -291,7 +291,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator-() {
+    Matrix Matrix::operator-() const {
         Matrix C(m, n);
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)
@@ -299,7 +299,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator~() {
+    Matrix Matrix::operator~() const {
         Matrix C(n, m);
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)
@@ -358,7 +358,6 @@ namespace mynt {
     }
 
     FLOAT Matrix::det() {
-
         if (m != n) {
             cerr << "ERROR: Trying to compute determinant of a matrix of size (" << m << "x" << n << ")" << endl;
             exit(0);
@@ -375,7 +374,6 @@ namespace mynt {
     }
 
     bool Matrix::solve(const Matrix &M, FLOAT eps) {
-
         // substitutes
         const Matrix &A = M;
         Matrix &B = *this;
@@ -470,7 +468,6 @@ namespace mynt {
     // or odd, respectively. This routine is used in combination with lubksb to solve linear equations
     // or invert a matrix.
     bool Matrix::lu(int32_t *idx, FLOAT &d, FLOAT eps) {
-
         if (m != n) {
             cerr << "ERROR: Trying to LU decompose a matrix of size (" << m << "x" << n << ")" << endl;
             exit(0);
@@ -535,7 +532,6 @@ namespace mynt {
     // U·W·V T. Thematrix U replaces a on output. The diagonal matrix of singular values W is output
     // as a vector w[1..n]. Thematrix V (not the transpose V T ) is output as v[1..n][1..n].
     void Matrix::svd(Matrix &U2, Matrix &W, Matrix &V) {
-
         Matrix U = Matrix(*this);
         U2 = Matrix(m, m);
         V = Matrix(n, n);
@@ -762,7 +758,7 @@ namespace mynt {
         W = Matrix(min(m, n), 1, w);
 
         // extract mxm submatrix U
-        U2.setMat(U.getMat(0, 0, m - 1, min(m - 1, n - 1)), 0, 0);
+        U2.set_mat(U.get_mat(0, 0, m - 1, min(m - 1, n - 1)), 0, 0);
 
         // release temporary memory
         free(w);
@@ -788,7 +784,7 @@ namespace mynt {
         return out;
     }
 
-    void Matrix::allocateMemory(const int32_t m_, const int32_t n_) {
+    void Matrix::allocate_memory(const int32_t m_, const int32_t n_) {
         m = abs(m_);
         n = abs(n_);
         if (m == 0 || n == 0) {
@@ -801,7 +797,7 @@ namespace mynt {
             val[i] = val[i - 1] + n;
     }
 
-    void Matrix::releaseMemory() {
+    void Matrix::release_memory() {
         if (val != 0) {
             free(val[0]);
             free(val);

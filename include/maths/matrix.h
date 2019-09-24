@@ -29,24 +29,24 @@ namespace mynt {
         FLOAT &operator()(const int row, const int col) const;
 
         // copies submatrix of M into array 'val', default values copy whole row/column/matrix
-        void getData(FLOAT *val_, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
+        void get_data(FLOAT *val_, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
 
         // set or get submatrices of current matrix
-        Matrix getMat(int32_t i1, int32_t j1, int32_t i2 = -1, int32_t j2 = -1);
+        Matrix get_mat(int32_t i1, int32_t j1, int32_t i2 = -1, int32_t j2 = -1) const;
 
-        void setMat(const Matrix &M, const int32_t i, const int32_t j);
+        void set_mat(const Matrix &M, const int32_t i, const int32_t j);
 
         // set sub-matrix to scalar (default 0), -1 as end replaces whole row/column/matrix
-        void setVal(FLOAT s, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
+        void set_val(FLOAT s, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
 
         // set (part of) diagonal to scalar, -1 as end replaces whole diagonal
-        void setDiag(FLOAT s, int32_t i1 = 0, int32_t i2 = -1);
+        void set_diag(FLOAT s, int32_t i1 = 0, int32_t i2 = -1);
 
         // clear matrix
         void zero();
 
         // extract columns with given index
-        Matrix extractCols(std::vector<int> idx);
+        Matrix extract_cols(std::vector<int> idx);
 
         // create identity matrix
         static Matrix eye(const int32_t m);
@@ -60,14 +60,14 @@ namespace mynt {
         static Matrix reshape(const Matrix &M, int32_t m, int32_t n);
 
         // simple arithmetic operations
-        Matrix operator+(const Matrix &M); // add matrix
-        Matrix operator-(const Matrix &M); // subtract matrix
+        Matrix operator+(const Matrix &M) const; // add matrix
+        Matrix operator-(const Matrix &M) const; // subtract matrix
         Matrix operator*(const Matrix &M) const; // multiply with matrix
-        Matrix operator*(const FLOAT &s);  // multiply with scalar
-        Matrix operator/(const Matrix &M); // divide elementwise by matrix (or vector)
+        Matrix operator*(const FLOAT &s) const;  // multiply with scalar
+        Matrix operator/(const Matrix &M) const; // divide elementwise by matrix (or vector)
         Matrix operator/(const FLOAT &s) const;  // divide by scalar
-        Matrix operator-();                // negative matrix
-        Matrix operator~();                // transpose
+        Matrix operator-() const;                // negative matrix
+        Matrix operator~() const;                // transpose
         FLOAT l2norm();                    // euclidean norm (vectors) / frobenius norm (matrices)
         FLOAT mean();                      // mean of all elements in matrix
 
@@ -88,12 +88,11 @@ namespace mynt {
         int32_t m, n;
 
     private:
-        void allocateMemory(const int32_t m_, const int32_t n_);
-        void releaseMemory();
+        void allocate_memory(const int32_t m_, const int32_t n_);
+        void release_memory();
 
         inline FLOAT pythag(FLOAT a, FLOAT b);
     };
-
 }
 
 #endif // MATRIX_H

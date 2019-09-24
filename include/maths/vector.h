@@ -17,45 +17,25 @@ namespace mynt {
     template<unsigned int _N>
     class Vector : public Matrix {
     public:
-        Vector() : Matrix(1, _N) {}
+        Vector() : Matrix(_N, 1) {}
 
-        Vector(const FLOAT *val) : Matrix(1, _N, val) {}
+        Vector(const FLOAT *val) : Matrix(_N, 1, val) {}
 
-        Vector(const Matrix &mat) : Matrix(mat) {
-            assert(mat.m == 1 && mat.n == _N);
-        }
+        Vector(const Matrix &mat) : Matrix(mat) { assert(mat.m == 1 && mat.n == _N); }
 
-        FLOAT &operator[](int idx) { return (*this)(0, idx); }
+        FLOAT &operator[](int idx) { return (*this)(idx, 0); }
 
-        const FLOAT &operator[](int idx) const { return (*this)(0, idx); }
+        const FLOAT &operator[](int idx) const { return (*this)(idx, 0); }
 
         inline unsigned int size() const { return _N; }
 
-        Vector operator*(const FLOAT &m) {
-            Vector v;
-            for(int i=0; i<this->size(); ++i)
-                v[i] = (*this)[i] * m;
-            return v;
-        }
+        Vector operator*(const FLOAT &m) const { return Matrix(*this) * m; }
 
-        Matrix operator*(const Vector &v) const {
-            int m = _N;
-            int n = v.size();
-            Matrix mat(m, n);
-            for (int i = 0; i < m; ++i)
-                for (int j = 0; j < n; ++j)
-                    mat(i, j) = (*this)[i] * v[j];
-            return mat;
-        }
+        Matrix operator*(const Vector &v) const { return Matrix(*this) * Matrix(v); }
 
-        Vector operator/(const FLOAT &m) const {
-            Vector v;
-            for(int i=0; i<this->size(); ++i)
-                v[i] = (*this)[i] / m;
-            return v;
-        }
+        Vector operator/(const FLOAT &m) const { return Matrix(*this) / m; }
 
-        inline FLOAT norm() { return this->l2norm(); }
+        Vector transpose() const { return ~Matrix(*this); }
 
         inline FLOAT dot(const Vector &v) {
             assert(_N == v.size());
@@ -66,14 +46,7 @@ namespace mynt {
         }
 
         template<unsigned int _M>
-        inline Vector<_M> block(int idx) const {
-            assert(idx>=0 && idx<_N);
-            assert(idx+_M <= _N);
-            Vector<_M> v;
-            for(int i=0; i<_M; ++i)
-                v[i] = (*this)[idx+i];
-            return v;
-        }
+        inline Vector<_M> block(int idx) const { return this->get_mat(idx, 0, idx+_M-1, 0); }
 
         inline FLOAT max_coeff(int &i_max) {
             FLOAT max = 0.0;
@@ -86,19 +59,13 @@ namespace mynt {
             }
             return max;
         }
-
-        friend std::ostream &operator<<(std::ostream &out, Vector &v) {
-            if(_N == 0)
-                out << "[empty Vector]";
-            else {
-                out << "[";
-                for(int i=0; i<_N-1; ++i)
-                    out << v[i] << ", ";
-                out << v[_N-1] << "]";
-            }
-            return out;
-        }
     };
+
+    typedef Vector<2> Vector2;
+    typedef Vector<3> Vector3;
+    typedef Vector<4> Vector4;
+    typedef Vector<5> Vector5;
+    typedef Vector<6> Vector6;
 }
 
 #endif //MYNT_BASIC_ALGTHMS_VECTOR_H

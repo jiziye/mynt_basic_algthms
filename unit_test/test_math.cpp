@@ -26,30 +26,30 @@ TEST(maths, Matrix)
 TEST(maths, Vector)
 {
     mynt::FLOAT val[] = {1,2,3,4,5};
-    mynt::Vector<5> va = mynt::Vector<5>(val);
+    mynt::Vector5 va = mynt::Vector5(val);
 
     va[1] = 10;
 
-    mynt::Vector<5> vb = va/2.0;
-    mynt::Vector<5> vc = va + vb;
+    mynt::Vector5 vb = va/2.0;
+    mynt::Vector5 vc = va + vb;
 
-    mynt::Vector<3> vd = va.block<3>(1);
+    mynt::Vector3 vd = va.block<3>(1);
 
-    std::cout << "va: " << va << std::endl;
-    std::cout << "vb: " << vb << std::endl;
-    std::cout << "vc: " << vc << std::endl;
-    std::cout << "vd: " << vd << std::endl;
+    std::cout << "va: " << va.transpose() << std::endl;
+    std::cout << "vb: " << vb.transpose() << std::endl;
+    std::cout << "vc: " << vc.transpose() << std::endl;
+    std::cout << "vd: " << vd.transpose() << std::endl;
 
     std::cout << "va dot va: " << va.dot(va) << std::endl;
 
-    mynt::Matrix ma =  va * va;
+    mynt::Matrix ma =  va * va.transpose();
     std::cout << "ma: \n" << ma << std::endl;
 }
 
 TEST(maths, math_basic)
 {
     mynt::FLOAT val[] = {1,2,3};
-    mynt::Vector<3> va = mynt::Vector<3>(val);
+    mynt::Vector3 va(val);
     mynt::Matrix ma = mynt::skew_symmetric(va);
     std::cout << "skew_symmetric ma: \n" << ma << std::endl;
 }

@@ -108,7 +108,7 @@ namespace mynt {
          * @brief Normalize the given quaternion to unit quaternion
          */
         inline Quarternion normalized() {
-            FLOAT l2norm = v4_.norm();
+            FLOAT l2norm = v4_.l2norm();
             return this->v4_ / l2norm;
         }
 
@@ -148,7 +148,8 @@ namespace mynt {
         }
 
         Quarternion operator*(const Quarternion &q) {
-            Vector<4> v4 = mynt::template operator*<4,4>(this->left_product_matrix(), q.v4_);
+//            Vector<4> v4 = mynt::template operator*<4,4>(this->left_product_matrix(), q.v4_);
+            Vector<4> v4 = this->left_product_matrix() * q.v4_;
             return Quarternion(v4).normalized();
         }
 

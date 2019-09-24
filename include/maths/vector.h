@@ -8,6 +8,7 @@
 #include "matrix.h"
 
 #include <assert.h>
+#include <initializer_list>
 
 namespace mynt {
 
@@ -18,6 +19,18 @@ namespace mynt {
     class Vector : public Matrix {
     public:
         Vector() : Matrix(_N, 1) {}
+
+        Vector(std::initializer_list<FLOAT> vlist) : Matrix(_N, 1) {
+            int i=0;
+            for(auto a : vlist) {
+                if(i==_N)
+                    break;
+                val[i][0] = a;
+                ++i;
+            }
+            for(; i<_N; ++i)
+                val[i][0] = 0.0;
+        }
 
         Vector(const FLOAT *val) : Matrix(_N, 1, val) {}
 

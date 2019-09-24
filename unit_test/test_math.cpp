@@ -39,10 +39,13 @@ TEST(maths, Vector)
 
     mynt::Vector3 vd = va.block<3>(1);
 
+    mynt::Vector<9> ve({1,2,3,4,5});
+
     std::cout << "va: " << va.transpose() << std::endl;
     std::cout << "vb: " << vb.transpose() << std::endl;
     std::cout << "vc: " << vc.transpose() << std::endl;
     std::cout << "vd: " << vd.transpose() << std::endl;
+    std::cout << "ve: " << ve.transpose() << std::endl;
 
     std::cout << "va dot va: " << va.dot(va) << std::endl;
 

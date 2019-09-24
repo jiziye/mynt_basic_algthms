@@ -25,7 +25,7 @@ if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
     link_directories(${Boost_LIBRARY_DIR})
 endif()
-add_library(mynt_maths SHARED src/maths/math_basics.cpp src/maths/matrix.cpp src/maths/random_numbers.cpp)
+add_library(mynt_maths SHARED src/maths/math_basics.cpp src/maths/matrix.cpp src/maths/vector.cpp src/maths/random_numbers.cpp)
 target_link_libraries(mynt_maths ${Boost_LIBRARIES})
 
 ## computer vision

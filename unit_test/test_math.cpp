@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "maths/math_basics.h"
+#include "maths/vector.h"
 #include "maths/random_numbers.h"
 
 TEST(maths, random_number) {

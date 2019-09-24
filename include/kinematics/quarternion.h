@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <cmath>
 
-#include "maths/math_basics.h"
+#include "maths/vector.h"
 
 namespace mynt {
 

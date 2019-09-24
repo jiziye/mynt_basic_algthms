@@ -21,17 +21,20 @@ TEST(maths, random_number) {
 TEST(maths, Matrix)
 {
     mynt::Matrix ma = mynt::Matrix::eye(5);
-    std::cout << "ma: \n" << 3.5 * ma << std::endl;
+    ma(0,2) = 1.6;
+    std::cout << "ma: \n" << 3.5 * ma.transpose() << std::endl;
 }
 
 TEST(maths, Vector)
 {
     mynt::FLOAT val[] = {1,2,3,4,5};
     mynt::Vector5 va = mynt::Vector5(val);
+    va *= 2;
 
     va[1] = 10;
 
     mynt::Vector5 vb = va/2.0;
+    vb += va;
     mynt::Vector5 vc = va + vb;
 
     mynt::Vector3 vd = va.block<3>(1);

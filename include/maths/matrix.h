@@ -68,6 +68,7 @@ namespace mynt {
         Matrix operator/(const FLOAT &s) const;  // divide by scalar
         Matrix operator-() const;                // negative matrix
         Matrix operator~() const;                // transpose
+        Matrix transpose() const { return ~(*this); }
         FLOAT l2norm() const;                    // euclidean norm (vectors) / frobenius norm (matrices)
         FLOAT mean();                      // mean of all elements in matrix
 

@@ -35,6 +35,10 @@ namespace mynt {
 
         Vector operator/(const FLOAT &m) const { return Matrix(*this) / m; }
 
+        void operator+=(const Vector &v) { *this = Matrix(*this) + Matrix(v); }
+
+        void operator*=(const FLOAT &m) { *this = Matrix(*this) * m; }
+
         Vector transpose() const { return ~Matrix(*this); }
 
         inline FLOAT dot(const Vector &v) {

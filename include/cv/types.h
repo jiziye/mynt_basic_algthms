@@ -76,19 +76,15 @@ namespace mynt {
         _T x;
         _T y;
   
-        Point2D() { x=y=0;}
+        Point2D() : x(0), y(0) {}
         
-        Point2D(_T _x, _T _y) : x(_x), y(_y) {}
+        Point2D(_T x, _T y) : x(x), y(y) {}
         
         Point2D(const Point2D &p) : x(p.x), y(p.y) {}
  
-        bool operator==(const Point2D &rhs) const {
-            return  x == rhs.x && y == rhs.y;
-        }
+        bool operator==(const Point2D &rhs) const { return  x == rhs.x && y == rhs.y; }
         
-        bool operator!=(const Point2D &rhs) const {
-            return x != rhs.x || y != rhs.y;
-        }
+        bool operator!=(const Point2D &rhs) const { return x != rhs.x || y != rhs.y; }
 
         Point2D &operator=(const Point2D &rhs) {
             if(this == &rhs)
@@ -98,50 +94,34 @@ namespace mynt {
             return *this;
         }
  
-        Point2D operator+(const Point2D &rhs) const {
-            Point2D p;
-            p.x = this->x + rhs.x;
-            p.y = this->y + rhs.y;
-            return p;
-        }
+        Point2D operator+(const Point2D &rhs) const { return Point2D(x+rhs.x, y+rhs.y); }
 
-        Point2D operator-(const Point2D &rhs) const {
-            Point2D p;
-            p.x = this->x - rhs.x;
-            p.y = this->y - rhs.y;
-            return p;
-        }
+        Point2D operator-(const Point2D &rhs) const { return Point2D(x-rhs.x, y-rhs.y); }
 
-        Point2D operator-() {
-            Point2D p;
-            p.x = -this->x;
-            p.y = -this->y;
-            return p;
-        }
-    
-        Point2D operator*(int n) const {
-            Point2D p;
-            p.x = this->x * n;
-            p.y = this->y * n;
-            return p;
-        }
+        Point2D operator*(int n)   const { return Point2D(x * n, x * n); }
 
+        Point2D operator/(int n)   const { return Point2D(x / n, x / n); }
 
-        Point2D operator/(int n) const {
-            Point2D p;
-            p.x = this->x / n;
-            p.y = this->y /n;
-            return p;
+        Point2D operator*(float n) const { return Point2D(x * n, x * n); }
+
+        Point2D operator/(float n) const { return Point2D(x / n, x / n); }
+
+        void operator*=(int n)   { this->x *= n; this->y *= n; }
+
+        void operator*=(float n) { this->x *= n; this->y *= n; }
+
+        Point2D operator-() { return Point2D(-x, -y); }
+
+        _T dot(const Point2D &pt) const { return this->x * pt.x + this->y * pt.y; }
+
+        friend std::ostream &operator<<(std::ostream &os, const Point2D &p) {
+            return os << "(" << p.x << ", " << p.y << ")";
         }
-
-        friend std::ostream &operator<<(std::ostream &os, const Point2D &p){
-            return os << "("<<p.x<<","<<p.y<<")";
-        }
-
     };
 
-    typedef Point2D<float> Point2f;
-    typedef Point2D<int>   Point2i;
+    typedef Point2D<int>    Point2i;
+    typedef Point2D<float>  Point2f;
+    typedef Point2D<double> Point2d;
 
     mynt::Point2f operator*(int n, const mynt::Point2f &pt) {
         return pt * n;         

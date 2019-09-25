@@ -37,6 +37,11 @@ TEST(cv, Point2D)
 
     mynt::Point2f d = a + b;
     std::cout<<a<<"+"<<b<<" = "<<d<<std::endl;
+
+    cv::Vec3d pt1(1,1,1);
+    cv::Vec3d pt2(2,2,2);
+    double val = (pt1.t() * pt2)[0];
+    std::cout << "pt: " << pt1.t() * pt2 << std::endl;
 }
 
 TEST(YImg, copy)

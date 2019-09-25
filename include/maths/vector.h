@@ -7,6 +7,7 @@
 
 #include "matrix.h"
 
+#include <cmath>
 #include <assert.h>
 #include <initializer_list>
 
@@ -74,6 +75,8 @@ namespace mynt {
                 norm += (*this)(i, 0);
             return norm;
         }
+
+        inline FLOAT squared_l2norm() const { return std::pow(l2norm(), 2); }
 
         Vector transpose() const { return ~Matrix(*this); }
 

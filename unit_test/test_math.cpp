@@ -41,11 +41,13 @@ TEST(maths, Matrix)
 TEST(maths, Vector)
 {
     Eigen::Vector4d v4(1,2,3,4);
+    std::cout << "va sqnorm 01: " << v4.squaredNorm() << std::endl;
     std::cout << "va l1norm 01: " << v4.lpNorm<1>() << std::endl;
 
     mynt::FLOAT val[] = {1,2,3,4};
     mynt::Vector5 va = mynt::Vector5(val);
 
+    std::cout << "va sqnorm 02: " << va.squared_l2norm() << std::endl;
     std::cout << "va l1norm 02: " << va.l1norm() << std::endl;
 
     va *= 2;

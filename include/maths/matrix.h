@@ -46,7 +46,9 @@ namespace mynt {
         void zero();
 
         // extract columns with given index
-        Matrix extract_cols(std::vector<int> idx);
+        Matrix extract_cols(std::vector<int> idx) const;
+
+        const Matrix row(int i) const;
 
         // create identity matrix
         static Matrix eye(const int32_t m);
@@ -66,6 +68,7 @@ namespace mynt {
         Matrix operator*(const FLOAT &s) const;  // multiply with scalar
         Matrix operator/(const Matrix &M) const; // divide elementwise by matrix (or vector)
         Matrix operator/(const FLOAT &s) const;  // divide by scalar
+        void operator+=(const Matrix &M) { *this = (*this) + M; }
         Matrix operator-() const;                // negative matrix
         Matrix operator~() const;                // transpose
         Matrix transpose() const { return ~(*this); }
@@ -75,7 +78,7 @@ namespace mynt {
         // complex arithmetic operations
         static Matrix cross(const Matrix &a, const Matrix &b);     // cross product of two vectors
         static Matrix inv(const Matrix &M);                        // invert matrix M
-        bool inv();                                                // invert this matrix
+        Matrix inv();                                              // invert this matrix
         FLOAT det();                                               // returns determinant of matrix
         bool solve(const Matrix &M, FLOAT eps = 1e-20);            // solve linear system M*x=B, replaces *this and M
         bool lu(int32_t *idx, FLOAT &d, FLOAT eps = 1e-20);        // replace *this by lower upper decomposition

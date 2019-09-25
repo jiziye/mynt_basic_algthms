@@ -133,12 +133,19 @@ namespace mynt {
         set_val(0);
     }
 
-    Matrix Matrix::extract_cols(vector<int> idx) {
+    Matrix Matrix::extract_cols(vector<int> idx) const {
         Matrix M(m, idx.size());
         for (int32_t j = 0; j < M.n; j++)
             if (idx[j] < n)
                 for (int32_t i = 0; i < m; i++)
                     M.val[i][j] = val[i][idx[j]];
+        return M;
+    }
+
+    const Matrix Matrix::row(int i) const {
+        Matrix M(1, n);
+        for(int32_t j = 0; j < M.n; j++)
+            M.val[0][j] = val[0][j];
         return M;
     }
 
@@ -346,15 +353,12 @@ namespace mynt {
         return B;
     }
 
-    bool Matrix::inv() {
+    Matrix Matrix::inv() {
         if (m != n) {
             cerr << "ERROR: Trying to invert matrix of size (" << m << "x" << n << ")" << endl;
             exit(0);
         }
-        Matrix A(*this);
-        eye();
-        solve(A);
-        return true;
+        return inv(*this);
     }
 
     FLOAT Matrix::det() {

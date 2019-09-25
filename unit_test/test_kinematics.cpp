@@ -9,6 +9,7 @@
 #include <opencv2/calib3d/calib3d.hpp>
 
 #include "kinematics/rotation_matrix.h"
+#include "kinematics/transform.h"
 #include "math_utils.hpp"
 
 TEST(kinematics, Quarternion)
@@ -88,4 +89,14 @@ TEST(kinematics, Convertor)
     cv::Mat R02;
     cv::Rodrigues(invec, R02);
     std::cout << "R 02:\n" << R02 << std::endl;
+}
+
+TEST(kinematics, EuclideanTransform)
+{
+    mynt::EuclideanTransform et01;
+    std::cout << "et01: \n" << et01 << std::endl;
+
+    mynt::Quarternion q = mynt::Quarternion::unit_random();
+    mynt::EuclideanTransform et02(q.rotation_matrix(), mynt::Vector3({1,2,3}));
+    std::cout << "et02: \n" << et02 << std::endl;
 }

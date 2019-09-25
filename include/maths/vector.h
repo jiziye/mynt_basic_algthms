@@ -15,6 +15,22 @@ namespace mynt {
     /**
      * @brief column vector
      */
+    class VectorX : public Matrix {
+    public:
+        VectorX(int n) : Matrix(n, 1) {}
+
+        VectorX(const Matrix &mat) : Matrix(mat) { assert(mat.n == 1); }
+
+        FLOAT &operator[](int idx) { return (*this)(idx, 0); }
+
+        const FLOAT &operator[](int idx) const { return (*this)(idx, 0); }
+
+        inline unsigned int size() const { return m; }
+    };
+
+    /**
+     * @brief column vector
+     */
     template<unsigned int _N>
     class Vector : public Matrix {
     public:
@@ -34,7 +50,7 @@ namespace mynt {
 
         Vector(const FLOAT *val) : Matrix(_N, 1, val) {}
 
-        Vector(const Matrix &mat) : Matrix(mat) { assert(mat.m == 1 && mat.n == _N); }
+        Vector(const Matrix &mat) : Matrix(mat) { assert(mat.m ==_N && mat.n == 1); }
 
         FLOAT &operator[](int idx) { return (*this)(idx, 0); }
 
@@ -51,6 +67,13 @@ namespace mynt {
         void operator+=(const Vector &v) { *this = Matrix(*this) + Matrix(v); }
 
         void operator*=(const FLOAT &m) { *this = Matrix(*this) * m; }
+
+        inline FLOAT l1norm() const {
+            FLOAT norm = 0;
+            for(int i=0; i<_N; ++i)
+                norm += (*this)(i, 0);
+            return norm;
+        }
 
         Vector transpose() const { return ~Matrix(*this); }
 
@@ -130,6 +153,16 @@ namespace mynt {
         }
         return v;
     }
+
+    /**
+     * @brief column Vector to Matrix
+     * @param v1
+     * @param v2
+     * @return
+     */
+    Matrix vec2mat(const Vector2 &v1, const Vector2 &v2);
+
+    Matrix vec2mat(const VectorX &v1, const VectorX &v2);
 }
 
 #endif //MYNT_BASIC_ALGTHMS_VECTOR_H

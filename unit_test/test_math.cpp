@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Eigen/Core>
+
 #include "maths/math_basics.h"
 #include "maths/vector.h"
 #include "maths/random_numbers.h"
@@ -23,12 +25,29 @@ TEST(maths, Matrix)
     mynt::Matrix ma = mynt::Matrix::eye(5);
     ma(0,2) = 1.6;
     std::cout << "ma: \n" << 3.5 * ma.transpose() << std::endl;
+
+    Eigen::Vector2d v21(1,1);
+    Eigen::Vector2d v22(2,2);
+    Eigen::Matrix2d m01;
+    m01 << v21, v22;
+    std::cout << "m01:\n" << m01 << std::endl;
+
+    mynt::Vector2 v1({1,1});
+    mynt::Vector2 v2({2,2});
+    mynt::Matrix m02 = mynt::vec2mat(v1, v2);
+    std::cout << "m02:\n" << m02 << std::endl;
 }
 
 TEST(maths, Vector)
 {
-    mynt::FLOAT val[] = {1,2,3,4,5};
+    Eigen::Vector4d v4(1,2,3,4);
+    std::cout << "va l1norm 01: " << v4.lpNorm<1>() << std::endl;
+
+    mynt::FLOAT val[] = {1,2,3,4};
     mynt::Vector5 va = mynt::Vector5(val);
+
+    std::cout << "va l1norm 02: " << va.l1norm() << std::endl;
+
     va *= 2;
 
     va[1] = 10;

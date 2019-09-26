@@ -15,15 +15,9 @@ namespace mynt {
     static int32_t iminarg1,iminarg2;
 #define IMIN(a,b) (iminarg1=(a),iminarg2=(b),(iminarg1) < (iminarg2) ? (iminarg1) : (iminarg2))
 
-    Matrix::Matrix() {
-        m = 0;
-        n = 0;
-        val = 0;
-    }
+    Matrix::Matrix() : m(0), n(0), val(0) {}
 
-    Matrix::Matrix(const int32_t m_, const int32_t n_) {
-        allocate_memory(m_, n_);
-    }
+    Matrix::Matrix(const int32_t m_, const int32_t n_) { allocate_memory(m_, n_); }
 
     Matrix::Matrix(const int32_t m_, const int32_t n_, const FLOAT *val_) {
         allocate_memory(m_, n_);
@@ -39,9 +33,7 @@ namespace mynt {
             memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
     }
 
-    Matrix::~Matrix() {
-        release_memory();
-    }
+    Matrix::~Matrix() { release_memory(); }
 
     Matrix &Matrix::operator=(const Matrix &M) {
         if (this != &M) {
@@ -129,9 +121,7 @@ namespace mynt {
             val[i][i] = s;
     }
 
-    void Matrix::zero() {
-        set_val(0);
-    }
+    void Matrix::zero() { set_val(0); }
 
     Matrix Matrix::extract_cols(vector<int> idx) const {
         Matrix M(m, idx.size());
@@ -162,6 +152,12 @@ namespace mynt {
                 val[i][j] = 0;
         for (int32_t i = 0; i < min(m, n); i++)
             val[i][i] = 1;
+    }
+
+    Matrix Matrix::identity(int32_t p, int32_t q) {
+        Matrix M = eye(p);
+        M.conservative_resize(p, q);
+        return M;
     }
 
     Matrix Matrix::diag(const Matrix &M) {
@@ -195,6 +191,19 @@ namespace mynt {
             M2.val[i2][j2] = M.val[i1][j1];
         }
         return M2;
+    }
+
+    void Matrix::conservative_resize(int32_t p, int32_t q) {
+        Matrix mat(p ,q);
+        if(p<=m && q<=n)
+            mat = get_mat(0, 0, p-1, q-1);
+        if(p>m && q>n)
+            mat.set_mat(*this, 0, 0);
+        if(p<=m && q>n)
+            mat.set_mat(get_mat(0, 0, p-1, n-1), 0, 0);
+        if(p>m && q<=n)
+            mat.set_mat(get_mat(0, 0, m-1, q-1), 0, 0);
+        *this = mat;
     }
 
     Matrix Matrix::operator+(const Matrix &M) const {

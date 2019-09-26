@@ -10,7 +10,8 @@
 #include "maths/vector.h"
 #include "maths/random_numbers.h"
 
-TEST(maths, random_number) {
+TEST(maths, random_number)
+{
     random_numbers::RandomNumberGenerator random_gen;
     int rng01 = random_gen.uniformInteger(0, 100);
 
@@ -22,9 +23,14 @@ TEST(maths, random_number) {
 
 TEST(maths, Matrix)
 {
-    mynt::Matrix ma = mynt::Matrix::eye(5);
-    ma(0,2) = 1.6;
-    std::cout << "ma: \n" << 3.5 * ma.transpose() << std::endl;
+    mynt::Matrix m3 = 3.5 * mynt::Matrix::eye(3);
+    m3(0, 2) = 1.1;
+    m3(2, 0) = 2.2;
+    mynt::Matrix ma = 2.3 * mynt::Matrix::eye(5);
+    ma.block<3,3>(0, 2) = m3;
+    std::cout << "ma: \n" << ma << std::endl;
+    ma.conservative_resize(7,4);
+    std::cout << "ma conservative_resize: \n" << ma << std::endl;
 
     Eigen::Vector2d v21(1,1);
     Eigen::Vector2d v22(2,2);
@@ -36,6 +42,20 @@ TEST(maths, Matrix)
     mynt::Vector2 v2({2,2});
     mynt::Matrix m02 = mynt::vec2mat(v1, v2);
     std::cout << "m02:\n" << m02 << std::endl;
+
+    Eigen::MatrixXd mx01(4,4);
+    mx01 <<
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        0, 1, 2, 3,
+        6, 7, 8, 9;
+    mx01.conservativeResize(3,3);
+    std::cout << "mx01:\n" << mx01 << std::endl;
+
+    Eigen::MatrixXd mx02 = Eigen::MatrixXd::Identity(3, 5);
+    std::cout << "mx02:\n" << mx02 << std::endl;
+
+    std::cout << "mx03:\n" << mynt::Matrix::identity(5, 3) << std::endl;
 }
 
 TEST(maths, Vector)
@@ -49,6 +69,8 @@ TEST(maths, Vector)
 
     std::cout << "va sqnorm 02: " << va.squared_l2norm() << std::endl;
     std::cout << "va l1norm 02: " << va.l1norm() << std::endl;
+
+    std::cout << "va t * va" << va.transpose() * va << std::endl;
 
     va *= 2;
 

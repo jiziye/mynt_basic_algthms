@@ -21,12 +21,37 @@ namespace mynt {
 
         ~Matrix();
 
+        inline int rows() const { return m; }
+        inline int cols() const { return n; }
+
         // assignment operator, copies contents of M
         Matrix &operator=(const Matrix &M);
 
         FLOAT &operator()(const int row, const int col);
 
         FLOAT &operator()(const int row, const int col) const;
+
+        Matrix &block(int i1, int j1, int mm, int nn) {
+            mat_ = new Matrix(mm, nn);
+            for(int i=0; i<mm; ++i)
+                mat_->val[i] = &val[i1+i][j1];
+            return *mat_;
+        }
+
+        template<unsigned int _M, unsigned int _N>
+        Matrix &block(int i1, int j1) {
+            mat_ = new Matrix(_M, _N);
+            for(int i=0; i<_M; ++i)
+                mat_->val[i] = &val[i1+i][j1];
+            return *mat_;
+        }
+
+        template<unsigned int _M, unsigned int _N>
+        Matrix block(int i1, int j1) const {
+            Matrix mat(_M, _N);
+            mat = get_mat(i1, j1, i1+_M-1, j1+_N-1);
+            return mat;
+        }
 
         // copies submatrix of M into array 'val', default values copy whole row/column/matrix
         void get_data(FLOAT *val_, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
@@ -53,6 +78,8 @@ namespace mynt {
         // create identity matrix
         static Matrix eye(const int32_t m);
 
+        static Matrix identity(int32_t p, int32_t q);
+
         void eye();
 
         // create diagonal matrix with nx1 or 1xn matrix M as elements
@@ -60,6 +87,8 @@ namespace mynt {
 
         // returns the m-by-n matrix whose elements are taken column-wise from M
         static Matrix reshape(const Matrix &M, int32_t m, int32_t n);
+
+        void conservative_resize(int32_t p, int32_t q);
 
         // simple arithmetic operations
         Matrix operator+(const Matrix &M) const; // add matrix
@@ -96,6 +125,9 @@ namespace mynt {
         void release_memory();
 
         inline FLOAT pythag(FLOAT a, FLOAT b);
+
+    private:
+        Matrix *mat_ = nullptr;
     };
 }
 

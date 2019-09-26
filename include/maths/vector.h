@@ -18,6 +18,8 @@ namespace mynt {
      */
     class VectorX : public Matrix {
     public:
+        VectorX() : Matrix() {}
+
         VectorX(int n) : Matrix(n, 1) {}
 
         VectorX(const Matrix &mat) : Matrix(mat) { assert(mat.n == 1); }
@@ -26,7 +28,20 @@ namespace mynt {
 
         const FLOAT &operator[](int idx) const { return (*this)(idx, 0); }
 
-        inline unsigned int size() const { return m; }
+        inline unsigned int size() const { return rows(); }
+
+        void conservative_resize(int32_t m) { Matrix(*this).conservative_resize(m, 1); }
+
+        template<unsigned int _M>
+        VectorX head() const { return this->get_mat(0, 0, _M-1, 0); }
+
+        template<unsigned int _M>
+        VectorX tail() const { return this->get_mat(rows()-_M, 0, rows()-1, 0); }
+
+        template<unsigned int _M>
+        inline VectorX segment(int idx) const { return this->get_mat(idx, 0, idx+_M-1, 0); }
+
+        void set_segment(int idx, const VectorX &v) { this->set_mat(v, idx, 0); }
     };
 
     /**

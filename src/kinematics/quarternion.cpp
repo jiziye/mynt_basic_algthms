@@ -64,6 +64,15 @@ namespace mynt {
         return q;
     }
 
+    Quarternion Quarternion::small_angle_quaternion(const VectorX &v) {
+        assert(v.size() == 3);
+        Vector3 v3;
+        v3[0] = v[0];
+        v3[1] = v[1];
+        v3[2] = v[2];
+        return small_angle_quaternion(v3);
+    }
+
     Matrix Quarternion::rotation_matrix() const {
         Matrix R(3, 3);
 #if Q_HAMILTON

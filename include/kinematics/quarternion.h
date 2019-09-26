@@ -104,6 +104,8 @@ namespace mynt {
             z() = v3[2];
         }
 
+        const Vector<4> vector4() const { return v4_; }
+
         /**
          * @brief Normalize the given quaternion to unit quaternion
          */
@@ -128,6 +130,8 @@ namespace mynt {
          */
         static Quarternion small_angle_quaternion(const Vector<3> &v3);
 
+        static Quarternion small_angle_quaternion(const VectorX &v3);
+
         /**
          * @brief Convert a quaternion to the corresponding rotation matrix
          * @note Pay attention to the convention used. The function follows the conversion in
@@ -147,7 +151,7 @@ namespace mynt {
             return (*this);
         }
 
-        Quarternion operator*(const Quarternion &q) {
+        Quarternion operator*(const Quarternion &q) const {
 //            Vector<4> v4 = mynt::template operator*<4,4>(this->left_product_matrix(), q.v4_);
             Vector<4> v4 = this->left_product_matrix() * q.v4_;
             return Quarternion(v4).normalized();

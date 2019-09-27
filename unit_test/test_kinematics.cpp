@@ -80,6 +80,7 @@ TEST(kinematics, RotationMatrix)
 
 TEST(kinematics, Convertor)
 {
+    // rodrigues
     mynt::FLOAT val[3] = {0.04345, -0.05236, -0.01810};
     mynt::Vector3 v3(val);
     mynt::RotationMatrix R01 = mynt::rodrigues(v3);
@@ -91,6 +92,17 @@ TEST(kinematics, Convertor)
     cv::Mat R02;
     cv::Rodrigues(invec, R02);
     std::cout << "R 02:\n" << R02 << std::endl;
+
+    // from_two_vector
+    mynt::Vector3 v31({1,2,3});
+    mynt::Vector3 v32({3,2,1});
+    mynt::RotationMatrix R12 = mynt::from_two_vector(v31, v32);
+    std::cout << "R12:\n" << R12 << std::endl;
+
+    Eigen::Vector3d ev31(1,2,3);
+    Eigen::Vector3d ev32(3,2,1);
+    Eigen::Matrix3d eR12 = Eigen::Quaterniond::FromTwoVectors(ev31, ev32).toRotationMatrix();
+    std::cout << "eR12:\n" << eR12 << std::endl;
 }
 
 TEST(kinematics, EuclideanTransform)

@@ -83,6 +83,7 @@ TEST(kinematics, Convertor)
     mynt::Vector3 v3(val);
     mynt::RotationMatrix R01 = mynt::rodrigues(v3);
     std::cout << "R 01:\n" << R01 << std::endl;
+    std::cout << "R 01 I:\n" << mynt::rodrigues(mynt::Vector3()) << std::endl;
 
     //    cv::Mat_<float> invec = (cv::Mat_<float>(3, 1) << 0.04345, -0.05236, -0.01810);
     cv::Vec3f invec(0.04345, -0.05236, -0.01810);

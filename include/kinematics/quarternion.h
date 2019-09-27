@@ -165,9 +165,9 @@ namespace mynt {
 
         friend std::ostream &operator<<(std::ostream &out, Quarternion q) {
 #if Q_HAMILTON
-            out << "[" << q.w() << ", " << q.x() << ", " << q.y() << ", " << q.z() << "]";
+            out << q.w() << " " << q.x() << " " << q.y() << " " << q.z();
 #else
-            out << "[" << q.x() << ", " << q.y() << ", " << q.z() << ", " << q.w() << "]";
+            out << q.x() << " " << q.y() << " " << q.z() << " " << q.w();
 #endif
             return out;
         }

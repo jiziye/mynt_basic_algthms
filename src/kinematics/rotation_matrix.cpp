@@ -20,11 +20,11 @@ namespace mynt {
         FLOAT s = sin(angle);
         FLOAT c = cos(angle);
         Matrix R(3, 3);
-        R.val[0][0] = +1;
-        R.val[1][1] = +c;
-        R.val[1][2] = -s;
-        R.val[2][1] = +s;
-        R.val[2][2] = +c;
+        R(0, 0) = +1;
+        R(1, 1) = +c;
+        R(1, 2) = -s;
+        R(2, 1) = +s;
+        R(2, 2) = +c;
         return R;
     }
 
@@ -32,11 +32,11 @@ namespace mynt {
         FLOAT s = sin(angle);
         FLOAT c = cos(angle);
         Matrix R(3, 3);
-        R.val[0][0] = +c;
-        R.val[0][2] = +s;
-        R.val[1][1] = +1;
-        R.val[2][0] = -s;
-        R.val[2][2] = +c;
+        R(0, 0) = +c;
+        R(0, 2) = +s;
+        R(1, 1) = +1;
+        R(2, 0) = -s;
+        R(2, 2) = +c;
         return R;
     }
 
@@ -44,11 +44,11 @@ namespace mynt {
         FLOAT s = sin(angle);
         FLOAT c = cos(angle);
         Matrix R(3, 3);
-        R.val[0][0] = +c;
-        R.val[0][1] = -s;
-        R.val[1][0] = +s;
-        R.val[1][1] = +c;
-        R.val[2][2] = +1;
+        R(0, 0) = +c;
+        R(0, 1) = -s;
+        R(1, 0) = +s;
+        R(1, 1) = +c;
+        R(2, 2) = +1;
         return R;
     }
 
@@ -98,6 +98,8 @@ namespace mynt {
 
     RotationMatrix rodrigues(const Vector3 &v3) {
         FLOAT theta = v3.l2norm();
+        if(theta == 0)
+            return RotationMatrix();
         Vector3 v3_hat = v3 / theta;
         RotationMatrix I;
         FLOAT c1 = std::cos(theta);

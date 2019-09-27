@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "common.h"
 
@@ -36,6 +37,10 @@ namespace mynt {
             for(int i=0; i<mm; ++i)
                 mat_->val[i] = &val[i1+i][j1];
             return *mat_;
+//            mat_ptr_ = std::make_shared<Matrix>(Matrix(mm, nn));
+//            for(int i=0; i<mm; ++i)
+//                mat_ptr_->val[i] = &val[i1+i][j1];
+//            return *mat_ptr_;
         }
 
         template<unsigned int _M, unsigned int _N>
@@ -44,6 +49,10 @@ namespace mynt {
             for(int i=0; i<_M; ++i)
                 mat_->val[i] = &val[i1+i][j1];
             return *mat_;
+//            mat_ptr_ = std::make_shared<Matrix>(Matrix(_M, _N));
+//            for(int i=0; i<_M; ++i)
+//                mat_ptr_->val[i] = &val[i1+i][j1];
+//            return *mat_ptr_;
         }
 
         template<unsigned int _M, unsigned int _N>
@@ -116,10 +125,6 @@ namespace mynt {
         // print matrix to stream
         friend std::ostream &operator<<(std::ostream &out, const Matrix &M);
 
-        // direct data access
-        FLOAT **val;
-        int32_t m, n;
-
     private:
         void allocate_memory(const int32_t m_, const int32_t n_);
         void release_memory();
@@ -127,7 +132,11 @@ namespace mynt {
         inline FLOAT pythag(FLOAT a, FLOAT b);
 
     private:
+        FLOAT **val;
+        int32_t m, n;
+
         Matrix *mat_ = nullptr;
+//        std::shared_ptr<Matrix> mat_ptr_;
     };
 }
 

@@ -22,6 +22,8 @@ namespace mynt {
             return tr;
         }
 
+        RotationMatrix transpose() const { return this->transpose(); }
+
         // create 3x3 rotation matrices (convention: http://en.wikipedia.org/wiki/Rotation_matrix)
         static RotationMatrix rot_mat_x(const FLOAT &angle);
 

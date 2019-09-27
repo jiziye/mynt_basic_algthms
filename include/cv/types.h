@@ -5,6 +5,8 @@
 #ifndef MYNT_BASIC_ALGTHMS_TYPES_H
 #define MYNT_BASIC_ALGTHMS_TYPES_H
 
+#include <iostream>
+
 namespace mynt {
 
     struct Size {
@@ -72,7 +74,7 @@ namespace mynt {
 
 
     template <typename _T>
-    struct Point2D { 
+    struct Point2D {
         _T x;
         _T y;
   
@@ -123,9 +125,7 @@ namespace mynt {
     typedef Point2D<float>  Point2f;
     typedef Point2D<double> Point2d;
 
-    mynt::Point2f operator*(int n, const mynt::Point2f &pt) {
-        return pt * n;         
-    }
+    Point2f operator*(int n, const Point2f &pt);
 }
 
 #endif //MYNT_BASIC_ALGTHMS_TYPES_H

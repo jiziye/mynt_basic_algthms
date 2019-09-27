@@ -18,7 +18,7 @@ if(OpenCV_FOUND)
     include_directories(${OpenCV_INCLUDE_DIRS})
 endif()
 add_executable(test_cv gtest_main.cpp test_cv.cpp)
-target_link_libraries(test_cv ${OpenCV_LIBS})
+target_link_libraries(test_cv mynt_cv ${OpenCV_LIBS})
 
 ## kinematics
 add_executable(test_kinematics gtest_main.cpp test_kinematics.cpp)

@@ -32,7 +32,7 @@ target_link_libraries(mynt_maths ${Boost_LIBRARIES})
 add_library(mynt_cv SHARED src/cv/types.cpp)
 
 ## kinematics
-add_library(mynt_kinematics SHARED src/kinematics/rotation_matrix.cpp src/kinematics/quarternion.cpp)
+add_library(mynt_kinematics SHARED src/kinematics/rotation_matrix.cpp src/kinematics/quarternion.cpp src/kinematics/convertor.cpp)
 target_link_libraries(mynt_kinematics mynt_maths)
 
 ## unit test

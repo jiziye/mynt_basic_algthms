@@ -37,14 +37,6 @@ namespace mynt {
          */
         const Quarternion quarternion() const;
     };
-
-    /**
-     * @brief Converts a rotation vector to a rotation matrix
-     *        ref: https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#rodrigues
-     * @param v3
-     * @return
-     */
-    RotationMatrix rodrigues(const Vector3 &v3);
 }
 
 #endif //MYNT_BASIC_ALGTHMS_ROTATION_MATRIX_H

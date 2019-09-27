@@ -10,6 +10,7 @@
 
 #include "kinematics/rotation_matrix.h"
 #include "kinematics/transform.h"
+#include "kinematics/convertor.h"
 #include "math_utils.hpp"
 
 TEST(kinematics, Quarternion)

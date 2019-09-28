@@ -76,10 +76,8 @@ TEST(kinematics, RotationMatrix)
             m3(i,j) = m_qa(i,j);
     std::cout << "q02: " << msckf::rotationToQuaternion(m3).transpose() << endll;
 
-    std::cout << "angle_axis(by RotationMatrix): \t"
-              << m_qa.angle_axis().angle() << ", " << m_qa.angle_axis().axis().transpose() << std::endl;
-    std::cout << "angle_axis(by Quarternion): \t"
-              << m_qa.quarternion().angle_axis().angle() << ", " << m_qa.quarternion().angle_axis().axis().transpose() << std::endl;
+    std::cout << "angle_axis(by RotationMatrix): \t" << m_qa.angle_axis() << std::endl;
+    std::cout << "angle_axis(by Quarternion): \t"    << m_qa.quarternion().angle_axis() << std::endl;
     std::cout << "angle_axis(by Eigen): \t\t"
               << Eigen::AngleAxisd(m3).angle() << ", " << Eigen::AngleAxisd(m3).axis().transpose() << std::endl;
 }

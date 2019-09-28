@@ -105,9 +105,6 @@ namespace mynt {
         v3[0] = -v3_skew(1,2);
         v3[1] =  v3_skew(0,2);
         v3[2] = -v3_skew(0,1);
-        AngleAxis angle_axis;
-        angle_axis.angle() = angle;
-        angle_axis.axis() = v3;
-        return angle_axis;
+        return AngleAxis(angle, v3);
     }
 }

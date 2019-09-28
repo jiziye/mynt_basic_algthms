@@ -6,6 +6,7 @@
 #define MYNT_BASIC_ALGTHMS_ROTATION_MATRIX_H
 
 #include "kinematics/quarternion.h"
+#include "kinematics/angle_axis.h"
 
 namespace mynt {
 
@@ -38,6 +39,14 @@ namespace mynt {
          * @return
          */
         const Quarternion quarternion() const;
+
+        /**
+         * @brief Rotation Matrix to Axis Angle
+         *        ref: https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#rodrigues
+         * @details
+         * @return
+         */
+        const AngleAxis angle_axis() const; // TODO: verify
     };
 }
 

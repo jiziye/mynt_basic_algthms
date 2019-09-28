@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <cmath>
 
-#include "maths/vector.h"
+#include "kinematics/angle_axis.h"
 
 namespace mynt {
 
@@ -140,7 +140,14 @@ namespace mynt {
          *       The input quaternion should be in the form [q1, q2, q3, q4(scalar)]^T
          * @return
          */
-        Matrix rotation_matrix() const;
+        const Matrix rotation_matrix() const;
+
+        /**
+         * @brief Quarternion to Angle Axis
+         *        ref: http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/
+         * @return
+         */
+        const AngleAxis angle_axis() const; // TODO: verify
 
         Matrix left_product_matrix() const;
 

@@ -10,6 +10,7 @@
 
 #include "kinematics/rotation_matrix.h"
 #include "kinematics/transform.h"
+#include "kinematics/angle_axis.h"
 #include "kinematics/convertor.h"
 #include "math_utils.hpp"
 
@@ -67,15 +68,20 @@ TEST(kinematics, RotationMatrix)
 
     std::cout << "m_qa:\n" << m_qa << std::endl;
 
-    mynt::Quarternion q01 = m_qa.quarternion();
-    std::cout << "q01: " << q01 << std::endl;
+    std::cout << "q01: " << m_qa.quarternion() << std::endl;
 
     Eigen::Matrix3d m3;
     for(int i=0; i<3; ++i)
         for(int j=0; j<3; ++j)
             m3(i,j) = m_qa(i,j);
-    Eigen::Vector4d q02 = msckf::rotationToQuaternion(m3);
-    std::cout << "q02: " << q02.transpose() << endll;
+    std::cout << "q02: " << msckf::rotationToQuaternion(m3).transpose() << endll;
+
+    std::cout << "angle_axis(by RotationMatrix): \t"
+              << m_qa.angle_axis().angle() << ", " << m_qa.angle_axis().axis().transpose() << std::endl;
+    std::cout << "angle_axis(by Quarternion): \t"
+              << m_qa.quarternion().angle_axis().angle() << ", " << m_qa.quarternion().angle_axis().axis().transpose() << std::endl;
+    std::cout << "angle_axis(by Eigen): \t\t"
+              << Eigen::AngleAxisd(m3).angle() << ", " << Eigen::AngleAxisd(m3).axis().transpose() << std::endl;
 }
 
 TEST(kinematics, Convertor)

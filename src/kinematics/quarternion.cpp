@@ -73,7 +73,7 @@ namespace mynt {
         return small_angle_quaternion(v3);
     }
 
-    Matrix Quarternion::rotation_matrix() const {
+    const Matrix Quarternion::rotation_matrix() const {
         Matrix R(3, 3);
 #if Q_HAMILTON
         // TODO
@@ -82,6 +82,17 @@ namespace mynt {
         //TODO: Is it necessary to use the approximation equation (Equation (87)) when the rotation angle is small?
 #endif
         return R;
+    }
+
+    const AngleAxis Quarternion::angle_axis() const {
+        AngleAxis angle_axis;
+//        FLOAT angle = 2 * std::acos(w());
+//        angle_axis.angle() = angle;
+//        angle_axis.axis()  = vec() / std::sin(angle * 0.5);
+        FLOAT norm = vec().l2norm();
+        angle_axis.angle() = 2 * std::atan2(norm, w());
+        angle_axis.axis() = vec() / norm;
+        return angle_axis;
     }
 
     Matrix Quarternion::left_product_matrix() const {

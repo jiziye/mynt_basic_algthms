@@ -86,14 +86,21 @@ namespace mynt {
     }
 
     const AngleAxis Quarternion::angle_axis() const {
-        AngleAxis angle_axis;
-//        FLOAT angle = 2 * std::acos(w());
-//        angle_axis.angle() = angle;
-//        angle_axis.axis()  = vec() / std::sin(angle * 0.5);
+        FLOAT angle;
+        Vector3 v3;
+
+//        angle = 2 * std::acos(w());
+//        v3  = vec() / std::sin(angle * 0.5);
+
         FLOAT norm = vec().l2norm();
-        angle_axis.angle() = 2 * std::atan2(norm, w());
-        angle_axis.axis() = vec() / norm;
-        return angle_axis;
+        angle = 2 * std::atan2(norm, w());
+        v3 = vec() / norm;
+
+//        // to be same with Eigen::AngleAxisd
+//        if(angle < M_PI) {
+//            angle = 2 * M_PI - angle;
+//        }
+        return AngleAxis(angle, v3);
     }
 
     Matrix Quarternion::left_product_matrix() const {

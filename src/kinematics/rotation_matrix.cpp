@@ -99,12 +99,20 @@ namespace mynt {
     const AngleAxis RotationMatrix::angle_axis() const {
         FLOAT angle = std::acos( (this->trace() - 1) * 0.5 );
         FLOAT s = std::sin(angle);
-        RotationMatrix R = (Matrix(*this) - Matrix(*this).transpose()) * 0.5;
+        RotationMatrix R = (*this - this->transpose()) * 0.5;
         Matrix v3_skew = R / s;
         Vector3 v3;
         v3[0] = -v3_skew(1,2);
         v3[1] =  v3_skew(0,2);
         v3[2] = -v3_skew(0,1);
+
+//        // to be same with Eigen::AngleAxisd
+//        if(angle < M_PI) {
+//            angle = 2 * M_PI - angle;
+//            v3 = -v3;
+//        } else {
+//            angle = angle - M_PI;
+//        }
         return AngleAxis(angle, v3);
     }
 }

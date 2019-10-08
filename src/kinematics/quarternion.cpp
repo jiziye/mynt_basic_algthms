@@ -40,6 +40,7 @@ namespace mynt {
     }
 
     Quarternion Quarternion::unit_random() {
+        srand((unsigned)time(0));
         double u1 = rand() / double(RAND_MAX); // [0, 1]
         double u2 = rand() / double(RAND_MAX) * M_2_PI;
         double u3 = rand() / double(RAND_MAX) * M_2_PI;

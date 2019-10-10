@@ -41,7 +41,7 @@ namespace mynt {
         template<unsigned int _M>
         inline VectorX segment(int idx) const { return this->get_mat(idx, 0, idx+_M-1, 0); }
 
-        void set_segment(int idx, const VectorX &v) { this->set_mat(v, idx, 0); }
+        void set_segment(int idx, const VectorX &v) { this->set_mat(idx, 0, v); }
     };
 
     /**

@@ -32,25 +32,25 @@ namespace mynt {
 
         FLOAT &operator()(const int row, const int col) const;
 
-        Matrix &block(int i1, int j1, int mm, int nn) {
-#if 0
-            mat_ = new Matrix(mm, nn);
-            for(int i=0; i<mm; ++i)
-                mat_->val[i] = &val[i1+i][j1];
-            return *mat_;
-//            mat_ptr_ = std::make_shared<Matrix>(Matrix(mm, nn));
+//        Matrix &block(int i1, int j1, int mm, int nn) {
+//#if 0
+//            mat_ = new Matrix(mm, nn);
 //            for(int i=0; i<mm; ++i)
-//                mat_ptr_->val[i] = &val[i1+i][j1];
-//            return *mat_ptr_;
-#else
-            is_block_ = true;
-            i1_ = i1;
-            j1_ = j1;
-            mm_ = mm;
-            nn_ = nn;
-            return *this;
-#endif
-        }
+//                mat_->val[i] = &val[i1+i][j1];
+//            return *mat_;
+////            mat_ptr_ = std::make_shared<Matrix>(Matrix(mm, nn));
+////            for(int i=0; i<mm; ++i)
+////                mat_ptr_->val[i] = &val[i1+i][j1];
+////            return *mat_ptr_;
+//#else
+//            is_block_ = true;
+//            i1_ = i1;
+//            j1_ = j1;
+//            mm_ = mm;
+//            nn_ = nn;
+//            return *this;
+//#endif
+//        }
 
         const Matrix block(int i1, int j1, int mm, int nn) const {
             if(0 == mm || 0 == nn)
@@ -60,26 +60,26 @@ namespace mynt {
             return mat;
         }
 
-        template<unsigned int _M, unsigned int _N>
-        Matrix &block(int i1, int j1) {
-#if 0
-            mat_ = new Matrix(_M, _N);
-            for(int i=0; i<_M; ++i)
-                mat_->val[i] = &val[i1+i][j1];
-            return *mat_;
-//            mat_ptr_ = std::make_shared<Matrix>(Matrix(_M, _N));
+//        template<unsigned int _M, unsigned int _N>
+//        Matrix &block(int i1, int j1) {
+//#if 0
+//            mat_ = new Matrix(_M, _N);
 //            for(int i=0; i<_M; ++i)
-//                mat_ptr_->val[i] = &val[i1+i][j1];
-//            return *mat_ptr_;
-#else
-            is_block_ = true;
-            i1_ = i1;
-            j1_ = j1;
-            mm_ = _M;
-            nn_ = _N;
-            return *this;
-#endif
-        }
+//                mat_->val[i] = &val[i1+i][j1];
+//            return *mat_;
+////            mat_ptr_ = std::make_shared<Matrix>(Matrix(_M, _N));
+////            for(int i=0; i<_M; ++i)
+////                mat_ptr_->val[i] = &val[i1+i][j1];
+////            return *mat_ptr_;
+//#else
+//            is_block_ = true;
+//            i1_ = i1;
+//            j1_ = j1;
+//            mm_ = _M;
+//            nn_ = _N;
+//            return *this;
+//#endif
+//        }
 
         template<unsigned int _M, unsigned int _N>
         const Matrix block(int i1, int j1) const {
@@ -94,7 +94,7 @@ namespace mynt {
         // set or get submatrices of current matrix
         Matrix get_mat(int32_t i1, int32_t j1, int32_t i2 = -1, int32_t j2 = -1) const;
 
-        void set_mat(const Matrix &M, const int32_t i, const int32_t j);
+        void set_mat(const int32_t i, const int32_t j, const Matrix &M);
 
         // set sub-matrix to scalar (default 0), -1 as end replaces whole row/column/matrix
         void set_val(FLOAT s, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
@@ -161,14 +161,14 @@ namespace mynt {
         FLOAT **val;
         int32_t m, n;
 
-        Matrix *mat_ = nullptr;
-//        std::shared_ptr<Matrix> mat_ptr_;
-
-        bool is_block_ = false;
-        int i1_;
-        int j1_;
-        int mm_;
-        int nn_;
+//        Matrix *mat_ = nullptr;
+////        std::shared_ptr<Matrix> mat_ptr_;
+//
+//        bool is_block_ = false;
+//        int i1_;
+//        int j1_;
+//        int mm_;
+//        int nn_;
     };
 }
 

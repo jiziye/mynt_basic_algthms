@@ -27,7 +27,7 @@ TEST(maths, Matrix)
     m3(0, 2) = 1.1;
     m3(2, 0) = 2.2;
     mynt::Matrix ma = 2.3 * mynt::Matrix::eye(5);
-    ma.block<3,3>(0, 2) = m3;
+    ma.set_mat(0, 2, m3);
     std::cout << "ma: \n" << ma << std::endl;
     ma.conservative_resize(7,4);
     std::cout << "ma conservative_resize: \n" << ma << std::endl;

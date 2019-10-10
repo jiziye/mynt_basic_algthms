@@ -39,8 +39,8 @@ namespace mynt {
     private:
         inline void update(bool flag=true) {
             if(flag) {
-                set_mat(rotation_matrix_, 0, 0);
-                set_mat(translation_, 0, 3);
+                set_mat(0, 0, rotation_matrix_);
+                set_mat(0, 3, translation_);
             } else {
                 rotation_matrix_ = get_mat(0, 0, 2, 2);
                 translation_ = get_mat(0, 3, 2, 3);

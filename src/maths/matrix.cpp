@@ -36,11 +36,11 @@ namespace mynt {
     Matrix::~Matrix() { release_memory(); }
 
     Matrix &Matrix::operator=(const Matrix &M) {
-        if(is_block_) {
-            for(int i=0; i<mm_; ++i)
-                for(int j=0; j<nn_; ++j)
-                    val[i1_+i][j1_+j] = M(i,j);
-        } else {
+//        if(is_block_) {
+//            for(int i=0; i<mm_; ++i)
+//                for(int j=0; j<nn_; ++j)
+//                    val[i1_+i][j1_+j] = M(i,j);
+//        } else {
             if (this != &M) {
                 if (M.m != m || M.n != n) {
                     release_memory();
@@ -50,9 +50,9 @@ namespace mynt {
                     for (int32_t i = 0; i < M.m; i++)
                         memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
             }
-        }
+//        }
 
-        is_block_ = false;
+//        is_block_ = false;
 
         return *this;
     }
@@ -100,7 +100,7 @@ namespace mynt {
         return M;
     }
 
-    void Matrix::set_mat(const Matrix &M, const int32_t i1, const int32_t j1) {
+    void Matrix::set_mat(const int32_t i1, const int32_t j1, const Matrix &M) {
         if (i1 < 0 || j1 < 0 || i1 + M.m > m || j1 + M.n > n) {
             cerr << "ERROR: Cannot set submatrix [" << i1 << ".." << i1 + M.m - 1 <<
                  "] x [" << j1 << ".." << j1 + M.n - 1 << "]" <<
@@ -211,11 +211,11 @@ namespace mynt {
         if(p<=m && q<=n)
             mat = get_mat(0, 0, p-1, q-1);
         if(p>m && q>n)
-            mat.set_mat(*this, 0, 0);
+            mat.set_mat(0, 0, *this);
         if(p<=m && q>n)
-            mat.set_mat(get_mat(0, 0, p-1, n-1), 0, 0);
+            mat.set_mat(0, 0, get_mat(0, 0, p-1, n-1));
         if(p>m && q<=n)
-            mat.set_mat(get_mat(0, 0, m-1, q-1), 0, 0);
+            mat.set_mat(0, 0, get_mat(0, 0, m-1, q-1));
         *this = mat;
     }
 
@@ -784,7 +784,7 @@ namespace mynt {
         W = Matrix(min(m, n), 1, w);
 
         // extract mxm submatrix U
-        U2.set_mat(U.get_mat(0, 0, m - 1, min(m - 1, n - 1)), 0, 0);
+        U2.set_mat(0, 0, U.get_mat(0, 0, m - 1, min(m - 1, n - 1)));
 
         // release temporary memory
         free(w);

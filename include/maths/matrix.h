@@ -33,6 +33,7 @@ namespace mynt {
         FLOAT &operator()(const int row, const int col) const;
 
         Matrix &block(int i1, int j1, int mm, int nn) {
+#if 0
             mat_ = new Matrix(mm, nn);
             for(int i=0; i<mm; ++i)
                 mat_->val[i] = &val[i1+i][j1];
@@ -41,10 +42,27 @@ namespace mynt {
 //            for(int i=0; i<mm; ++i)
 //                mat_ptr_->val[i] = &val[i1+i][j1];
 //            return *mat_ptr_;
+#else
+            is_block_ = true;
+            i1_ = i1;
+            j1_ = j1;
+            mm_ = mm;
+            nn_ = nn;
+            return *this;
+#endif
+        }
+
+        const Matrix block(int i1, int j1, int mm, int nn) const {
+            if(0 == mm || 0 == nn)
+                return Matrix(mm, nn);
+            Matrix mat(mm, nn);
+            mat = get_mat(i1, j1, i1+mm-1, j1+nn-1);
+            return mat;
         }
 
         template<unsigned int _M, unsigned int _N>
         Matrix &block(int i1, int j1) {
+#if 0
             mat_ = new Matrix(_M, _N);
             for(int i=0; i<_M; ++i)
                 mat_->val[i] = &val[i1+i][j1];
@@ -53,10 +71,18 @@ namespace mynt {
 //            for(int i=0; i<_M; ++i)
 //                mat_ptr_->val[i] = &val[i1+i][j1];
 //            return *mat_ptr_;
+#else
+            is_block_ = true;
+            i1_ = i1;
+            j1_ = j1;
+            mm_ = _M;
+            nn_ = _N;
+            return *this;
+#endif
         }
 
         template<unsigned int _M, unsigned int _N>
-        Matrix block(int i1, int j1) const {
+        const Matrix block(int i1, int j1) const {
             Matrix mat(_M, _N);
             mat = get_mat(i1, j1, i1+_M-1, j1+_N-1);
             return mat;
@@ -137,6 +163,12 @@ namespace mynt {
 
         Matrix *mat_ = nullptr;
 //        std::shared_ptr<Matrix> mat_ptr_;
+
+        bool is_block_ = false;
+        int i1_;
+        int j1_;
+        int mm_;
+        int nn_;
     };
 }
 

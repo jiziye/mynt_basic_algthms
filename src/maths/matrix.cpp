@@ -36,15 +36,24 @@ namespace mynt {
     Matrix::~Matrix() { release_memory(); }
 
     Matrix &Matrix::operator=(const Matrix &M) {
-        if (this != &M) {
-            if (M.m != m || M.n != n) {
-                release_memory();
-                allocate_memory(M.m, M.n);
+        if(is_block_) {
+            for(int i=0; i<mm_; ++i)
+                for(int j=0; j<nn_; ++j)
+                    val[i1_+i][j1_+j] = M(i,j);
+        } else {
+            if (this != &M) {
+                if (M.m != m || M.n != n) {
+                    release_memory();
+                    allocate_memory(M.m, M.n);
+                }
+                if (M.n > 0)
+                    for (int32_t i = 0; i < M.m; i++)
+                        memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
             }
-            if (M.n > 0)
-                for (int32_t i = 0; i < M.m; i++)
-                    memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
         }
+
+        is_block_ = false;
+
         return *this;
     }
 
@@ -194,6 +203,10 @@ namespace mynt {
     }
 
     void Matrix::conservative_resize(int32_t p, int32_t q) {
+        if(0 == p || 0 == q) {
+            *this = Matrix(p, q);
+            return;
+        }
         Matrix mat(p ,q);
         if(p<=m && q<=n)
             mat = get_mat(0, 0, p-1, q-1);

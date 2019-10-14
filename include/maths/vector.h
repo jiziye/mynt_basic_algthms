@@ -30,7 +30,11 @@ namespace mynt {
 
         inline unsigned int size() const { return rows(); }
 
-        void conservative_resize(int32_t m) { Matrix(*this).conservative_resize(m, 1); }
+        void conservative_resize(int32_t m) {
+            Matrix m_tmp = *this;
+            m_tmp.conservative_resize(m, 1);
+            *this = m_tmp;
+        }
 
         template<unsigned int _M>
         VectorX head() const { return this->get_mat(0, 0, _M-1, 0); }

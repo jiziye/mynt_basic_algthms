@@ -60,6 +60,20 @@ TEST(maths, Matrix)
 
 TEST(maths, Vector)
 {
+    Eigen::VectorXd vX(5);
+    vX << 1,2,3,4,5;
+    vX.conservativeResize(3);
+    std::cout << "vX conservativeResize:" << vX.transpose() << std::endl;
+
+    mynt::VectorX vX01(5);
+    vX01[0] = 1;
+    vX01[1] = 2;
+    vX01[2] = 3;
+    vX01[3] = 4;
+    vX01[4] = 5;
+    vX01.conservative_resize(3);
+    std::cout << "vX01 conservativeResize:" << vX01.transpose() << std::endl;
+
     Eigen::Vector4d v4(1,2,3,4);
     std::cout << "va sqnorm 01: " << v4.squaredNorm() << std::endl;
     std::cout << "va l1norm 01: " << v4.lpNorm<1>() << std::endl;

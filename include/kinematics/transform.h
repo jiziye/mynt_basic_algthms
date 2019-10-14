@@ -39,6 +39,7 @@ namespace mynt {
     private:
         inline void update(bool flag=true) {
             if(flag) {
+                eye();
                 set_mat(0, 0, rotation_matrix_);
                 set_mat(0, 3, translation_);
             } else {

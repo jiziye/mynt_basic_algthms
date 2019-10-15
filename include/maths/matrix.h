@@ -32,25 +32,8 @@ namespace mynt {
 
         FLOAT &operator()(const int row, const int col) const;
 
-//        Matrix &block(int i1, int j1, int mm, int nn) {
-//#if 0
-//            mat_ = new Matrix(mm, nn);
-//            for(int i=0; i<mm; ++i)
-//                mat_->val[i] = &val[i1+i][j1];
-//            return *mat_;
-////            mat_ptr_ = std::make_shared<Matrix>(Matrix(mm, nn));
-////            for(int i=0; i<mm; ++i)
-////                mat_ptr_->val[i] = &val[i1+i][j1];
-////            return *mat_ptr_;
-//#else
-//            is_block_ = true;
-//            i1_ = i1;
-//            j1_ = j1;
-//            mm_ = mm;
-//            nn_ = nn;
-//            return *this;
-//#endif
-//        }
+        // TODO
+//        Matrix &block(int i1, int j1, int mm, int nn) {}
 
         const Matrix block(int i1, int j1, int mm, int nn) const {
             if(0 == mm || 0 == nn)
@@ -60,26 +43,9 @@ namespace mynt {
             return mat;
         }
 
+        // TODO
 //        template<unsigned int _M, unsigned int _N>
-//        Matrix &block(int i1, int j1) {
-//#if 0
-//            mat_ = new Matrix(_M, _N);
-//            for(int i=0; i<_M; ++i)
-//                mat_->val[i] = &val[i1+i][j1];
-//            return *mat_;
-////            mat_ptr_ = std::make_shared<Matrix>(Matrix(_M, _N));
-////            for(int i=0; i<_M; ++i)
-////                mat_ptr_->val[i] = &val[i1+i][j1];
-////            return *mat_ptr_;
-//#else
-//            is_block_ = true;
-//            i1_ = i1;
-//            j1_ = j1;
-//            mm_ = _M;
-//            nn_ = _N;
-//            return *this;
-//#endif
-//        }
+//        Matrix &block(int i1, int j1) {}
 
         template<unsigned int _M, unsigned int _N>
         const Matrix block(int i1, int j1) const {
@@ -160,15 +126,6 @@ namespace mynt {
     private:
         FLOAT **val;
         int32_t m, n;
-
-//        Matrix *mat_ = nullptr;
-////        std::shared_ptr<Matrix> mat_ptr_;
-//
-//        bool is_block_ = false;
-//        int i1_;
-//        int j1_;
-//        int mm_;
-//        int nn_;
     };
 }
 

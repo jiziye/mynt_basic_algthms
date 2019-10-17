@@ -29,7 +29,8 @@ add_library(mynt_maths SHARED src/maths/math_basics.cpp src/maths/matrix.cpp src
 target_link_libraries(mynt_maths ${Boost_LIBRARIES})
 
 ## computer vision
-add_library(mynt_cv SHARED src/cv/types.cpp)
+add_library(mynt_cv SHARED src/cv/types.cpp src/cv/undistort.cpp)
+target_link_libraries(mynt_cv mynt_maths)
 
 ## kinematics
 add_library(mynt_kinematics SHARED src/kinematics/rotation_matrix.cpp src/kinematics/quarternion.cpp src/kinematics/convertor.cpp)

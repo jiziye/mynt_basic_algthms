@@ -5,6 +5,8 @@
 #ifndef MSCKF_VIO_MYNT_MAT_H
 #define MSCKF_VIO_MYNT_MAT_H
 
+#include "maths/matrix.h"
+
 namespace mynt {
 
     template<unsigned int _M, unsigned int _N>

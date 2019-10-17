@@ -69,4 +69,14 @@ namespace mynt {
             pt_out.y = y;
         }
     }
+
+    void undistort_points_fisheye(
+            const std::vector<mynt::Point2f> &pts_in, std::vector<mynt::Point2f> &pts_out,
+            const mynt::Mat3 &camera_matrix,
+            const mynt::Vector4 &distortion_coeffs,
+            const mynt::Mat3 &R,
+            const mynt::Mat3 &P) {
+        // TODO
+        std::cout << "undistort_points_fisheye need to be implemented!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+    }
 }

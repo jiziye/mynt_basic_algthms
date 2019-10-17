@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include <Eigen/Core>
+#include <Eigen/SVD>
 
 #include "maths/math_basics.h"
 #include "maths/vector.h"
@@ -116,5 +117,27 @@ TEST(maths, math_basic)
     mynt::Vector3 va(val);
     mynt::Matrix ma = mynt::skew_symmetric(va);
     std::cout << "skew_symmetric ma: \n" << ma << std::endl;
+}
+
+TEST(math, SVD)
+{
+    Eigen::MatrixXd emx;
+    emx.setRandom(6, 9);
+
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd_helper(emx, Eigen::ComputeFullU | Eigen::ComputeThinV);
+    std::cout << "SVD U (Eigen): \n" << svd_helper.matrixU() << std::endl;
+    std::cout << "SVD V (Eigen): \n" << svd_helper.matrixV() << std::endl;
+    std::cout << "SVD S (Eigen): \n" << svd_helper.singularValues() << std::endl;
+
+    mynt::Matrix A(emx.rows(), emx.cols());
+    for(int i=0; i<emx.rows(); ++i)
+        for(int j=0; j<emx.cols(); ++j)
+            A(i, j) = emx(i, j);
+
+    mynt::Matrix U, W, V;
+    A.svd(U, W, V);
+    std::cout << "SVD U (Viso2):\n" << U << std::endl;
+    std::cout << "SVD V (Viso2):\n" << V << std::endl;
+    std::cout << "SVD W (Viso2):\n" << W << std::endl;
 }
 

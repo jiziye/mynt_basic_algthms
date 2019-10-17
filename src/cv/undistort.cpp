@@ -15,6 +15,11 @@ namespace mynt {
             const mynt::Mat3 &R,
             const mynt::Mat3 &P) {
 
+        if(pts_in.empty()) {
+            std::cerr << "ERROR: pts_in is EMPTY!!!" << std::endl;
+            return;
+        }
+
         FLOAT fx = camera_matrix(0, 0);
         FLOAT fy = camera_matrix(1, 1);
         FLOAT cx = camera_matrix(0, 2);
@@ -77,6 +82,14 @@ namespace mynt {
             const mynt::Mat3 &R,
             const mynt::Mat3 &P) {
         // TODO
-        std::cout << "undistort_points_fisheye need to be implemented!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+        std::cout << "undistort_points_fisheye need to be implemented !!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+    }
+
+    void distort_points_fisheye(
+            const std::vector<mynt::Point2f> &pts_in, std::vector<mynt::Point2f> &pts_out,
+            const mynt::Mat3 &camera_matrix,
+            const mynt::Vector4 &distortion_coeffs) {
+        // TODO
+        std::cout << "distort_points_fisheye need to be implemented !!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     }
 }

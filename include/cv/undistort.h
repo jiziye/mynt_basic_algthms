@@ -28,7 +28,7 @@ namespace mynt {
             const mynt::Mat3 &P=mynt::Matrix::eye(3));
 
     /**
-     * @brief same with cv::fisheye::undistortPoints, Distorts 2D points using fisheye model
+     * @brief same with cv::fisheye::undistortPoints, UnDistorts 2D points using fisheye model
      * @param pts_in
      * @param pts_out
      * @param camera_matrix
@@ -42,6 +42,18 @@ namespace mynt {
             const mynt::Vector4 &distortion_coeffs,
             const mynt::Mat3 &R=mynt::Matrix::eye(3),
             const mynt::Mat3 &P=mynt::Matrix::eye(3));
+
+    /**
+     * @brief same with cv::fisheye::distortPoints, Distorts 2D points using fisheye model
+     * @param pts_in
+     * @param pts_out
+     * @param camera_matrix
+     * @param distortion_coeffs
+     */
+    void distort_points_fisheye(
+            const std::vector<mynt::Point2f> &pts_in, std::vector<mynt::Point2f> &pts_out,
+            const mynt::Mat3 &camera_matrix,
+            const mynt::Vector4 &distortion_coeffs);
 }
 
 #endif //MSCKF_VIO_MYNT_UNDISTORT_H

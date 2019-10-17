@@ -100,13 +100,13 @@ namespace mynt {
 
         Point2D operator-(const Point2D &rhs) const { return Point2D(x-rhs.x, y-rhs.y); }
 
-        Point2D operator*(int n)   const { return Point2D(x * n, x * n); }
+        Point2D operator*(int n)   const { return Point2D(x * n, y * n); }
 
-        Point2D operator/(int n)   const { return Point2D(x / n, x / n); }
+        Point2D operator/(int n)   const { return Point2D(x / n, y / n); }
 
-        Point2D operator*(float n) const { return Point2D(x * n, x * n); }
+        Point2D operator*(float n) const { return Point2D(x * n, y * n); }
 
-        Point2D operator/(float n) const { return Point2D(x / n, x / n); }
+        Point2D operator/(float n) const { return Point2D(x / n, y / n); }
 
         void operator*=(int n)   { this->x *= n; this->y *= n; }
 
@@ -117,7 +117,7 @@ namespace mynt {
         _T dot(const Point2D &pt) const { return this->x * pt.x + this->y * pt.y; }
 
         friend std::ostream &operator<<(std::ostream &os, const Point2D &p) {
-            return os << "(" << p.x << ", " << p.y << ")";
+            return os << "[" << p.x << ", " << p.y << "]";
         }
     };
 
@@ -126,6 +126,60 @@ namespace mynt {
     typedef Point2D<double> Point2d;
 
     Point2f operator*(int n, const Point2f &pt);
+
+    template <typename _T>
+    struct Point3D {
+        _T x;
+        _T y;
+        _T z;
+
+        Point3D() : x(0), y(0), z(0) {}
+
+        Point3D(_T x, _T y, _T z) : x(x), y(y), z(z) {}
+
+        Point3D(const Point3D &p) : x(p.x), y(p.y), z(p.z) {}
+
+        bool operator==(const Point3D &rhs) const { return  x == rhs.x && y == rhs.y && z == rhs.z; }
+
+        bool operator!=(const Point3D &rhs) const { return x != rhs.x || y != rhs.y || z != rhs.z; }
+
+        Point3D &operator=(const Point3D &rhs) {
+            if(this == &rhs)
+                return *this;
+            x = rhs.x;
+            y = rhs.y;
+            z = rhs.z;
+            return *this;
+        }
+
+        Point3D operator+(const Point3D &rhs) const { return Point3D(x+rhs.x, y+rhs.y, z+rhs.z); }
+
+        Point3D operator-(const Point3D &rhs) const { return Point3D(x-rhs.x, y-rhs.y, z-rhs.z); }
+
+        Point3D operator*(int n)   const { return Point3D(x * n, y * n, z * n); }
+
+        Point3D operator/(int n)   const { return Point3D(x / n, y / n, z / n); }
+
+        Point3D operator*(float n) const { return Point3D(x * n, y * n, z * n); }
+
+        Point3D operator/(float n) const { return Point3D(x / n, y / n, z / n); }
+
+        void operator*=(int n)   { this->x *= n; this->y *= n; this->z *= n; }
+
+        void operator*=(float n) { this->x *= n; this->y *= n; this->z *= n; }
+
+        Point3D operator-() { return Point3D(-x, -y, -z); }
+
+        _T dot(const Point3D &pt) const { return this->x * pt.x + this->y * pt.y + this->z * pt.z; }
+
+        friend std::ostream &operator<<(std::ostream &os, const Point3D &p) {
+            return os << "[" << p.x << ", " << p.y << ", " << p.z << "]";
+        }
+    };
+
+    typedef Point3D<int>    Point3i;
+    typedef Point3D<float>  Point3f;
+    typedef Point3D<double> Point3d;
 }
 
 #endif //MYNT_BASIC_ALGTHMS_TYPES_H

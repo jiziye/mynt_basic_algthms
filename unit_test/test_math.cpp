@@ -44,6 +44,16 @@ TEST(maths, Matrix)
     mynt::Matrix m02 = mynt::vec2mat(v1, v2);
     std::cout << "m02:\n" << m02 << std::endl;
 
+    mynt::VectorX vX01(5);
+    vX01[0] = 1;
+    vX01[1] = 2;
+    vX01[2] = 3;
+    vX01[3] = 4;
+    vX01[4] = 5;
+    mynt::VectorX vX02 = vX01 * 2;
+    mynt::Matrix mX02 = mynt::vec2mat(vX01, vX02);
+    std::cout << "mX02:\n" << mX02 << std::endl;
+
     Eigen::MatrixXd mx01(4,4);
     mx01 <<
         1, 2, 3, 4,

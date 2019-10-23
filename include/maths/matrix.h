@@ -14,23 +14,26 @@ namespace mynt {
 
     class Matrix {
     public:
-        // constructor / deconstructor
         Matrix();                                                    // init empty 0x0 matrix
         Matrix(const int32_t m, const int32_t n);                    // init empty mxn matrix
         Matrix(const int32_t m, const int32_t n, const FLOAT *val_); // init mxn matrix with values from array 'val'
         Matrix(const Matrix &M);                                     // creates deepcopy of M
 
-        ~Matrix();
+        virtual ~Matrix();
 
-        inline int rows() const { return m; }
-        inline int cols() const { return n; }
+        inline const int rows() const { return m; }
+        inline const int cols() const { return n; }
 
-        // assignment operator, copies contents of M
+        /**
+         * @brief assignment operator, copies contents of M
+         * @param M
+         * @return
+         */
         Matrix &operator=(const Matrix &M);
 
         FLOAT &operator()(const int row, const int col);
 
-        FLOAT &operator()(const int row, const int col) const;
+        const FLOAT &operator()(const int row, const int col) const;
 
         // TODO
 //        Matrix &block(int i1, int j1, int mm, int nn) {}
@@ -54,67 +57,86 @@ namespace mynt {
             return mat;
         }
 
-        // copies submatrix of M into array 'val', default values copy whole row/column/matrix
-        void get_data(FLOAT *val_, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
+        /**
+         * @brief get submatrices of current matrix
+         * @param i1
+         * @param j1
+         * @param i2
+         * @param j2
+         * @return
+         */
+        const Matrix get_mat(int32_t i1, int32_t j1, int32_t i2 = -1, int32_t j2 = -1) const;
 
-        // set or get submatrices of current matrix
-        Matrix get_mat(int32_t i1, int32_t j1, int32_t i2 = -1, int32_t j2 = -1) const;
-
+        /**
+         * @brief set submatrices of current matrix
+         * @param i
+         * @param j
+         * @param M
+         */
         void set_mat(const int32_t i, const int32_t j, const Matrix &M);
 
-        // set sub-matrix to scalar (default 0), -1 as end replaces whole row/column/matrix
-        void set_val(FLOAT s, int32_t i1 = 0, int32_t j1 = 0, int32_t i2 = -1, int32_t j2 = -1);
-
-        // set (part of) diagonal to scalar, -1 as end replaces whole diagonal
+        /**
+         * @brief set (part of) diagonal to scalar, -1 as end replaces whole diagonal
+         * @param s
+         * @param i1
+         * @param i2
+         */
         void set_diag(FLOAT s, int32_t i1 = 0, int32_t i2 = -1);
 
-        // clear matrix
-        void zero();
+        /**
+         * @brief create diagonal matrix with nx1 or 1xn matrix M as elements
+         * @param M
+         * @return
+         */
+        static Matrix diag(const Matrix &M);
 
-        // extract columns with given index
-        Matrix extract_cols(std::vector<int> idx) const;
+        /**
+         * @brief extract columns with given index
+         * @param idx
+         * @return
+         */
+        const Matrix extract_cols(std::vector<int> idx) const;
 
         const Matrix row(int i) const;
 
-        // create identity matrix
         static Matrix eye(const int32_t m);
 
         static Matrix identity(int32_t p, int32_t q);
 
         void eye();
 
-        // create diagonal matrix with nx1 or 1xn matrix M as elements
-        static Matrix diag(const Matrix &M);
-
-        // returns the m-by-n matrix whose elements are taken column-wise from M
-        static Matrix reshape(const Matrix &M, int32_t m, int32_t n);
-
         void conservative_resize(int32_t p, int32_t q);
 
         // simple arithmetic operations
-        Matrix operator+(const Matrix &M) const; // add matrix
-        Matrix operator-(const Matrix &M) const; // subtract matrix
-        Matrix operator*(const Matrix &M) const; // multiply with matrix
-        Matrix operator*(const FLOAT &s) const;  // multiply with scalar
-        Matrix operator/(const Matrix &M) const; // divide elementwise by matrix (or vector)
-        Matrix operator/(const FLOAT &s) const;  // divide by scalar
+        const Matrix operator+(const Matrix &M) const; // add matrix
+        const Matrix operator-(const Matrix &M) const; // subtract matrix
+        const Matrix operator*(const Matrix &M) const; // multiply with matrix
+        const Matrix operator*(const FLOAT &s) const;  // multiply with scalar
+        const Matrix operator/(const Matrix &M) const; // divide elementwise by matrix (or vector)
+        const Matrix operator/(const FLOAT &s) const;  // divide by scalar
+
         void operator+=(const Matrix &M) { *this = (*this) + M; }
-        Matrix operator-() const;                // negative matrix
-        Matrix operator~() const;                // transpose
-        Matrix transpose() const { return ~(*this); }
-        FLOAT l2norm() const;                    // euclidean norm (vectors) / frobenius norm (matrices)
-        FLOAT mean();                      // mean of all elements in matrix
+        const Matrix operator-() const;                        // negative matrix
+
+        const Matrix transpose() const;
+        virtual FLOAT l2norm() const;                    // euclidean norm (vectors) / frobenius norm (matrices)
+        FLOAT mean();                                    // mean of all elements in matrix
 
         // complex arithmetic operations
         static Matrix cross(const Matrix &a, const Matrix &b);     // cross product of two vectors
-        static Matrix inv(const Matrix &M);                        // invert matrix M
-        Matrix inv();                                              // invert this matrix
+        const Matrix inv(const Matrix &M) const;                        // invert matrix M
+        const Matrix inv() const;                                              // invert this matrix
         FLOAT det();                                               // returns determinant of matrix
         bool solve(const Matrix &M, FLOAT eps = 1e-20);            // solve linear system M*x=B, replaces *this and M
         bool lu(int32_t *idx, FLOAT &d, FLOAT eps = 1e-20);        // replace *this by lower upper decomposition
         void svd(Matrix &U, Matrix &W, Matrix &V);                 // singular value decomposition *this = U*diag(W)*V^T
 
-        // print matrix to stream
+        /**
+         * @brief print matrix to stream
+         * @param out
+         * @param M
+         * @return
+         */
         friend std::ostream &operator<<(std::ostream &out, const Matrix &M);
 
     private:

@@ -25,6 +25,8 @@ namespace mynt {
 #endif
 
     typedef double FLOAT; // double precision, float for single precision
+
+    const FLOAT EPS = 1e-20;
 }
 
 #endif //MYNT_BASIC_ALGTHMS_COMMON_H

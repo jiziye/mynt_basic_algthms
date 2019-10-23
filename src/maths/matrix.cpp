@@ -33,58 +33,40 @@ namespace mynt {
             memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
     }
 
-    Matrix::~Matrix() { release_memory(); }
+    Matrix::~Matrix() {
+        release_memory();
+    }
 
     Matrix &Matrix::operator=(const Matrix &M) {
-//        if(is_block_) {
-//            for(int i=0; i<mm_; ++i)
-//                for(int j=0; j<nn_; ++j)
-//                    val[i1_+i][j1_+j] = M(i,j);
-//        } else {
-            if (this != &M) {
-                if (M.m != m || M.n != n) {
-                    release_memory();
-                    allocate_memory(M.m, M.n);
-                }
-                if (M.n > 0)
-                    for (int32_t i = 0; i < M.m; i++)
-                        memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
+        if (this != &M) {
+            if (M.m != m || M.n != n) {
+                release_memory();
+                allocate_memory(M.m, M.n);
             }
-//        }
-
-//        is_block_ = false;
-
+            if (M.n > 0)
+                for (int32_t i = 0; i < M.m; i++)
+                    memcpy(val[i], M.val[i], M.n * sizeof(FLOAT));
+        }
         return *this;
     }
 
     FLOAT &Matrix::operator()(const int i_, const int j_) {
         if(i_<0 || i_>= m || j_<0 || j_>=n) {
-            FLOAT err = 1e9;
             std::cerr << "ERROR: Cannot get value from a (" << m << "x" << n << ") matrix." << endl;
-            return err;
+            exit(0);
         }
         return val[i_][j_];
     }
 
-    FLOAT &Matrix::operator()(const int i_, const int j_) const {
+    const FLOAT &Matrix::operator()(const int i_, const int j_) const {
         if(i_<0 || i_>= m || j_<0 || j_>=n) {
-            FLOAT err = 1e9;
             std::cerr << "ERROR: Cannot get value from a (" << m << "x" << n << ") matrix." << endl;
-            return err;
+            exit(0);
         }
         return val[i_][j_];
     }
 
-    void Matrix::get_data(FLOAT *val_, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
-        if (i2 == -1) i2 = m - 1;
-        if (j2 == -1) j2 = n - 1;
-        int32_t k = 0;
-        for (int32_t i = i1; i <= i2; i++)
-            for (int32_t j = j1; j <= j2; j++)
-                val_[k++] = val[i][j];
-    }
-
-    Matrix Matrix::get_mat(int32_t i1, int32_t j1, int32_t i2, int32_t j2) const {
+    const Matrix Matrix::get_mat(int32_t i1, int32_t j1, int32_t i2, int32_t j2) const {
         if (i2 == -1) i2 = m - 1;
         if (j2 == -1) j2 = n - 1;
         if (i1 < 0 || i2 >= m || j1 < 0 || j2 >= n || i2 < i1 || j2 < j1) {
@@ -112,27 +94,13 @@ namespace mynt {
                 val[i1 + i][j1 + j] = M.val[i][j];
     }
 
-    void Matrix::set_val(FLOAT s, int32_t i1, int32_t j1, int32_t i2, int32_t j2) {
-        if (i2 == -1) i2 = m - 1;
-        if (j2 == -1) j2 = n - 1;
-        if (i2 < i1 || j2 < j1) {
-            cerr << "ERROR in setVal: Indices must be ordered (i1<=i2, j1<=j2)." << endl;
-            exit(0);
-        }
-        for (int32_t i = i1; i <= i2; i++)
-            for (int32_t j = j1; j <= j2; j++)
-                val[i][j] = s;
-    }
-
     void Matrix::set_diag(FLOAT s, int32_t i1, int32_t i2) {
         if (i2 == -1) i2 = min(m - 1, n - 1);
         for (int32_t i = i1; i <= i2; i++)
             val[i][i] = s;
     }
 
-    void Matrix::zero() { set_val(0); }
-
-    Matrix Matrix::extract_cols(vector<int> idx) const {
+    const Matrix Matrix::extract_cols(vector<int> idx) const {
         Matrix M(m, idx.size());
         for (int32_t j = 0; j < M.n; j++)
             if (idx[j] < n)
@@ -185,23 +153,6 @@ namespace mynt {
         exit(0);
     }
 
-    Matrix Matrix::reshape(const Matrix &M, int32_t m_, int32_t n_) {
-        if (M.m * M.n != m_ * n_) {
-            cerr << "ERROR: Trying to reshape a matrix of size (" << M.m << "x" << M.n <<
-                 ") to size (" << m_ << "x" << n_ << ")" << endl;
-            exit(0);
-        }
-        Matrix M2(m_, n_);
-        for (int32_t k = 0; k < m_ * n_; k++) {
-            int32_t i1 = k / M.n;
-            int32_t j1 = k % M.n;
-            int32_t i2 = k / n_;
-            int32_t j2 = k % n_;
-            M2.val[i2][j2] = M.val[i1][j1];
-        }
-        return M2;
-    }
-
     void Matrix::conservative_resize(int32_t p, int32_t q) {
         if(0 == p || 0 == q) {
             *this = Matrix(p, q);
@@ -219,7 +170,7 @@ namespace mynt {
         *this = mat;
     }
 
-    Matrix Matrix::operator+(const Matrix &M) const {
+    const Matrix Matrix::operator+(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
         if (A.m != B.m || A.n != B.n) {
@@ -234,7 +185,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator-(const Matrix &M) const {
+    const Matrix Matrix::operator-(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
         if (A.m != B.m || A.n != B.n) {
@@ -249,7 +200,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator*(const Matrix &M) const {
+    const Matrix Matrix::operator*(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
         if (A.n != B.m) {
@@ -265,7 +216,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator*(const FLOAT &s) const {
+    const Matrix Matrix::operator*(const FLOAT &s) const {
         Matrix C(m, n);
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)
@@ -273,7 +224,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator/(const Matrix &M) const {
+    const Matrix Matrix::operator/(const Matrix &M) const {
         const Matrix &A = *this;
         const Matrix &B = M;
 
@@ -308,7 +259,7 @@ namespace mynt {
         }
     }
 
-    Matrix Matrix::operator/(const FLOAT &s) const {
+    const Matrix Matrix::operator/(const FLOAT &s) const {
         if (fabs(s) < 1e-20) {
             cerr << "ERROR: Trying to divide by zero!" << endl;
             exit(0);
@@ -320,7 +271,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator-() const {
+    const Matrix Matrix::operator-() const {
         Matrix C(m, n);
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)
@@ -328,7 +279,7 @@ namespace mynt {
         return C;
     }
 
-    Matrix Matrix::operator~() const {
+    const Matrix Matrix::transpose() const {
         Matrix C(n, m);
         for (int32_t i = 0; i < m; i++)
             for (int32_t j = 0; j < n; j++)
@@ -364,7 +315,7 @@ namespace mynt {
         return c;
     }
 
-    Matrix Matrix::inv(const Matrix &M) {
+    const Matrix Matrix::inv(const Matrix &M) const {
         if (M.m != M.n) {
             cerr << "ERROR: Trying to invert matrix of size (" << M.m << "x" << M.n << ")" << endl;
             exit(0);
@@ -375,7 +326,7 @@ namespace mynt {
         return B;
     }
 
-    Matrix Matrix::inv() {
+    const Matrix Matrix::inv() const {
         if (m != n) {
             cerr << "ERROR: Trying to invert matrix of size (" << m << "x" << n << ")" << endl;
             exit(0);

@@ -97,8 +97,6 @@ namespace mynt {
 
         inline FLOAT squared_l2norm() const { return std::pow(l2norm(), 2); }
 
-        Vector transpose() const { return ~Matrix(*this); }
-
         inline FLOAT dot(const Vector &v) {
             assert(_N == v.size());
             FLOAT sum = 0.0;
@@ -155,7 +153,7 @@ namespace mynt {
      * @return
      */
     template<unsigned int _M>
-    Vector<_M> operator*(FLOAT s, Vector<_M> V)  { return V * s; }
+    Vector<_M> operator*(FLOAT s, Vector<_M> V)  { return Matrix(V) * s; }
 
     /**
      * @brief M * V
@@ -167,9 +165,9 @@ namespace mynt {
     static Vector<_M> operator*(const Matrix &M, const Vector<_N> &V) {
         assert(M.n == V.size() && M.m == _M);
         Vector<_M> v;
-        for(int i=0; i<M.m; ++i) {
+        for(int i=0; i<M.rows(); ++i) {
             FLOAT sum_i = 0.0;
-            for(int j=0; j<M.n; ++j)
+            for(int j=0; j<M.cols(); ++j)
                 sum_i += M(i,j) * V[j];
             v[i] = sum_i;
         }

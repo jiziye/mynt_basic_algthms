@@ -21,8 +21,8 @@ namespace mynt {
 
         virtual ~Matrix();
 
-        inline const int rows() const { return m; }
-        inline const int cols() const { return n; }
+        inline const int rows() const { return m_; }
+        inline const int cols() const { return n_; }
 
         /**
          * @brief assignment operator, copies contents of M
@@ -146,8 +146,8 @@ namespace mynt {
         inline FLOAT pythag(FLOAT a, FLOAT b);
 
     private:
-        FLOAT **val;
-        int32_t m, n;
+        FLOAT **val_;
+        int32_t m_, n_;
     };
 }
 

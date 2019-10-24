@@ -24,6 +24,8 @@ TEST(maths, random_number)
 
 TEST(maths, Matrix)
 {
+    std::cout << "init matrix: \n" << mynt::Matrix(3,3) << std::endl;
+
     mynt::Matrix m3 = 3.5 * mynt::Matrix::eye(3);
     m3(0, 2) = 1.1;
     m3(2, 0) = 2.2;

@@ -10,6 +10,7 @@
 
 #include "cv/types.h"
 #include "cv/yimg.h"
+#include "cv/corner_detector.h"
 
 TEST(cv, Size)
 {
@@ -61,5 +62,22 @@ TEST(YImg, copy)
     mempcpy(mat_dst.data, yimg_dst.data(), yimg_dst.size().area());
 
     cv::imshow("YImg copy test", mat_dst);
+    cv::waitKey(1000);
+}
+
+TEST(CornerDetector, detect_features)
+{
+    cv::Mat mat_src = cv::imread("../data/lena.bmp", cv::ImreadModes::IMREAD_GRAYSCALE);
+
+    std::vector<cv::Point2f> new_features;
+    mynt::CornerDetector detector;
+    detector.detect_features(mat_src, new_features);
+
+    cv::Mat mat_dst(mat_src.rows, mat_src.cols, CV_8UC3);
+    cv::cvtColor(mat_src, mat_dst, CV_GRAY2BGR);
+    for (const auto &pt : new_features) {
+        cv::circle(mat_dst, pt, 3, cv::Scalar(0, 255, 0), -1);
+    }
+    cv::imshow("CornerDetector FAST", mat_dst);
     cv::waitKey(1000);
 }

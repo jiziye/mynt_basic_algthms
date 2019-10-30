@@ -19,6 +19,9 @@ endif(CMAKE_BUILD_TYPE MATCHES "Release")
 
 include_directories(include)
 
+add_subdirectory(3rdparty/fast)
+include_directories(3rdparty/fast/include)
+
 ## maths
 find_package(Boost REQUIRED COMPONENTS system)
 if(Boost_FOUND)
@@ -33,8 +36,13 @@ add_library(mynt_kinematics SHARED src/kinematics/rotation_matrix.cpp src/kinema
 target_link_libraries(mynt_kinematics mynt_maths)
 
 ## computer vision
-add_library(mynt_cv SHARED src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp)
-target_link_libraries(mynt_cv mynt_kinematics)
+find_package(OpenCV REQUIRED COMPONENTS core)
+if(OpenCV_FOUND)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+    link_libraries(${OpenCV_LIBS})
+endif()
+add_library(mynt_cv SHARED src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp src/cv/corner_detector.cpp)
+target_link_libraries(mynt_cv mynt_kinematics fast)
 
 ## unit test
 if(BUILD_TEST)

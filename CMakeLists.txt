@@ -41,7 +41,12 @@ if(OpenCV_FOUND)
     include_directories(${OpenCV_INCLUDE_DIRS})
     link_libraries(${OpenCV_LIBS})
 endif()
-add_library(mynt_cv SHARED src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp src/cv/corner_detector.cpp)
+set(CMAKE_MODULE_PATH APPEND "${CMAKE_SOURCE_DIR}/unit_test/cmake_modules/")
+find_package(Eigen3)
+if(Eigen3_FOUND)
+    include_directories(${EIGEN3_INCLUDE_DIR})
+endif()
+add_library(mynt_cv SHARED src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp src/cv/corner_detector.cpp src/cv/visual_tracking.cpp)
 target_link_libraries(mynt_cv mynt_kinematics fast)
 
 ## unit test

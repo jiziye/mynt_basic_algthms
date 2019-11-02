@@ -11,6 +11,7 @@
 #include "cv/types.h"
 #include "cv/yimg.h"
 #include "cv/corner_detector.h"
+#include "cv/image_filtering.h"
 
 TEST(cv, Size)
 {
@@ -81,4 +82,33 @@ TEST(CornerDetector, detect_features)
     }
     cv::imshow("CornerDetector FAST", mat_dst);
     cv::waitKey(1000);
+}
+
+
+TEST(ImageFiltering, gaussian_blur) {
+    cv::Mat mat_src = cv::imread("../data/lena.bmp", cv::ImreadModes::IMREAD_GRAYSCALE);
+
+    ASSERT_FALSE(mat_src.empty());
+
+    mynt::YImg8 yimg_src(mat_src.rows, mat_src.cols);
+    memcpy(yimg_src.data(), mat_src.data, yimg_src.size().area());
+
+    mynt::YImg8 yimg_dst(yimg_src.size());
+    mynt::gaussian_blur(yimg_src, yimg_dst, 5, 0.84089642);
+
+    cv::Mat mat_dst_01;
+    mat_dst_01.create(mat_src.rows, mat_src.cols, CV_8UC1);
+    mempcpy(mat_dst_01.data, yimg_dst.data(), yimg_dst.size().area());
+
+    cv::Mat mat_dst_02;
+    cv::GaussianBlur(mat_src, mat_dst_02, cv::Size(5, 5), 0.84089642);
+
+    mynt::pyr_down(yimg_src, yimg_dst);
+    cv::Mat mat_dst_03(yimg_dst.rows(), yimg_dst.cols(), CV_8UC1);
+    mempcpy(mat_dst_03.data, yimg_dst.data(), yimg_dst.size().area());
+
+    cv::imshow("GaussianBlur YImg", mat_dst_01);
+    cv::imshow("GaussianBlur OCV", mat_dst_02);
+    cv::imshow("PyrDown YImg", mat_dst_03);
+    cv::waitKey(0);
 }

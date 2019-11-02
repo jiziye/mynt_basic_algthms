@@ -42,7 +42,8 @@ if(OpenCV_FOUND)
     link_libraries(${OpenCV_LIBS})
 endif()
 include_directories("/usr/include/eigen3/")
-add_library(mynt_cv SHARED src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp src/cv/corner_detector.cpp src/cv/visual_tracking.cpp)
+add_library(mynt_cv SHARED
+        src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp src/cv/corner_detector.cpp src/cv/visual_tracking.cpp src/cv/image_filtering.cpp)
 target_link_libraries(mynt_cv mynt_kinematics fast)
 
 ## unit test

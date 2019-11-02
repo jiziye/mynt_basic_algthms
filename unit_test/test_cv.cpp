@@ -51,10 +51,10 @@ TEST(YImg, copy)
 
     ASSERT_FALSE(mat_src.empty());
 
-    mynt::YImg<unsigned char> yimg_src(mat_src.cols, mat_src.rows);
+    mynt::YImg8 yimg_src(mat_src.rows, mat_src.cols);
     memcpy(yimg_src.data(), mat_src.data, yimg_src.size().area());
 
-    mynt::YImg<unsigned char> yimg_dst(yimg_src.size());
+    mynt::YImg8 yimg_dst(yimg_src.size());
     yimg_src.copy(yimg_dst);
 
     cv::Mat mat_dst;

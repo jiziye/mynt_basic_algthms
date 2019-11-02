@@ -6,8 +6,9 @@
 
 namespace mynt {
 
-    CornerDetector::CornerDetector(int n_rows, int n_cols, double detection_threshold) :
+    CornerDetector::CornerDetector(int n_rows, int n_cols, double fast_threshold, double detection_threshold) :
             grid_n_rows_(n_rows), grid_n_cols_(n_cols),
+            fast_threshold_(fast_threshold),
             detection_threshold_(detection_threshold) {
         occupancy_grid_.clear();
         occupancy_grid_.resize(grid_n_rows_ * grid_n_cols_, false);
@@ -19,7 +20,7 @@ namespace mynt {
         occupancy_grid_.resize(grid_n_rows_ * grid_n_cols_, false);
     }
 
-    int CornerDetector::sub2ind(const cv::Point2f &sub) {
+    int CornerDetector::sub2ind(const mynt::Point2f &sub) {
         return static_cast<int>(sub.y / grid_height_) * grid_n_cols_ + static_cast<int>(sub.x / grid_width_);
     }
 
@@ -27,7 +28,7 @@ namespace mynt {
         std::fill(occupancy_grid_.begin(), occupancy_grid_.end() - 1, false);
     }
 
-    void CornerDetector::set_grid_position(const cv::Point2f &pos) {
+    void CornerDetector::set_grid_position(const mynt::Point2f &pos) {
         occupancy_grid_[sub2ind(pos)] = true;
     }
 
@@ -72,13 +73,13 @@ namespace mynt {
         return 0.5 * (dXX + dYY - sqrt((dXX + dYY) * (dXX + dYY) - 4 * (dXX * dYY - dXY * dXY)));
     }
 
-    void CornerDetector::detect_features(const cv::Mat &image, std::vector<cv::Point2f> &features) {
+    void CornerDetector::detect_features(const cv::Mat &image, std::vector<mynt::Point2f> &features, std::vector<double> &nm_scores) {
         grid_height_ = (image.rows / grid_n_rows_) + 1;
         grid_width_  = (image.cols / grid_n_cols_) + 1;
 
         features.clear();
         std::vector<double> score_table(grid_n_rows_ * grid_n_cols_);
-        std::vector<cv::Point2f> feature_table(grid_n_rows_ * grid_n_cols_);
+        std::vector<mynt::Point2f> feature_table(grid_n_rows_ * grid_n_cols_);
         std::vector<fast::fast_xy> fast_corners;
 
 #ifdef __SSE2__
@@ -92,7 +93,7 @@ namespace mynt {
 #endif
 
         std::vector<int> scores, nm_corners;
-        fast::fast_corner_score_10((fast::fast_byte *) image.data, image.cols, fast_corners, 20, scores);
+        fast::fast_corner_score_10((fast::fast_byte *) image.data, image.cols, fast_corners, fast_threshold_, scores);
         fast::fast_nonmax_3x3(fast_corners, scores, nm_corners);
 
         // ALEX: Updated loop
@@ -101,13 +102,13 @@ namespace mynt {
             if (xy.x >= grid_n_cols_ * grid_width_ ||
                 xy.y >= grid_n_rows_ * grid_height_)
                 continue;
-            const int k = sub2ind(cv::Point2f(xy.x, xy.y));
+            const int k = sub2ind(mynt::Point2f(xy.x, xy.y));
             if (occupancy_grid_[k])
                 continue;
             const float score = shiTomasiScore(image, xy.x, xy.y);
             if (score > score_table[k]) {
                 score_table[k] = static_cast<double>(score);
-                feature_table[k] = cv::Point2f(xy.x, xy.y);
+                feature_table[k] = mynt::Point2f(xy.x, xy.y);
             }
         }
 
@@ -115,8 +116,9 @@ namespace mynt {
         // ALEX: Replaced corner object from original code
         for (int i = 0; i < score_table.size(); i++) {
             if (score_table[i] > detection_threshold_) {
-                cv::Point2f pos = feature_table[i];
-                features.push_back(cv::Point2f(pos.x, pos.y));
+                mynt::Point2f pos = feature_table[i];
+                features.push_back(mynt::Point2f(pos.x, pos.y));
+                nm_scores.push_back(score_table[i]);
             }
         }
         zero_occupancy_grid();

@@ -9,17 +9,19 @@
 
 #include <fast/fast.h>
 
+#include "cv/types.h"
+
 namespace mynt {
 
     class CornerDetector {
     public:
-        CornerDetector(int n_rows = 8, int n_cols = 10, double detection_threshold = 40.0);
+        CornerDetector(int n_rows = 8, int n_cols = 10, double fast_threshold = 20, double detection_threshold = 40.0);
 
         ~CornerDetector() {};
 
-        void detect_features(const cv::Mat &image, std::vector<cv::Point2f> &features);
+        void detect_features(const cv::Mat &image, std::vector<mynt::Point2f> &features, std::vector<double> &nm_scores);
 
-        void set_grid_position(const cv::Point2f &pos);
+        void set_grid_position(const mynt::Point2f &pos);
 
         void set_grid_size(int n_rows, int n_cols);
 
@@ -29,7 +31,7 @@ namespace mynt {
 
         float shiTomasiScore(const cv::Mat &img, int u, int v);
 
-        int sub2ind(const cv::Point2f &sub);
+        int sub2ind(const mynt::Point2f &sub);
 
     private:
         void zero_occupancy_grid();
@@ -39,6 +41,7 @@ namespace mynt {
         int grid_n_rows_, grid_n_cols_, grid_width_, grid_height_;
         // Threshold for corner score
         double detection_threshold_;
+        double fast_threshold_;
     }; // CornerDetector class
 }
 

@@ -108,9 +108,15 @@ namespace mynt {
 
         Point2D operator/(float n) const { return Point2D(x / n, y / n); }
 
+        void operator+=(const Point2D &rhs)   { this->x += rhs.x; this->y += rhs.y; }
+
+        void operator-=(const Point2D &rhs)   { this->x -= rhs.x; this->y -= rhs.y; }
+
         void operator*=(int n)   { this->x *= n; this->y *= n; }
 
         void operator*=(float n) { this->x *= n; this->y *= n; }
+
+        void operator/=(float n) { this->x /= n; this->y /= n; }
 
         Point2D operator-() { return Point2D(-x, -y); }
 

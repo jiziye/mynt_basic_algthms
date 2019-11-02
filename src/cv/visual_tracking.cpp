@@ -12,8 +12,8 @@ namespace mynt {
     void OpticalFlowSingleLevel(
             const cv::Mat &img1,
             const cv::Mat &img2,
-            const vector<cv::Point2f> &kpt1,
-            vector<cv::Point2f> &kpt2,
+            const vector<mynt::Point2f> &kpt1,
+            vector<mynt::Point2f> &kpt2,
             vector<unsigned char> &success,
             int path_size,
             int max_iters,
@@ -105,10 +105,10 @@ namespace mynt {
 
             // set kp2
             if (have_initial) {
-                kpt2[i] = kpt + cv::Point2f(dx, dy);
+                kpt2[i] = kpt + mynt::Point2f(dx, dy);
             } else {
-                cv::Point2f tracked = kpt;
-                tracked += cv::Point2f(dx, dy);
+                mynt::Point2f tracked = kpt;
+                tracked += mynt::Point2f(dx, dy);
                 kpt2.push_back(tracked);
             }
         }
@@ -117,8 +117,8 @@ namespace mynt {
     void OpticalFlowMultiLevel(
             const vector<cv::Mat> &pyr1,
             const vector<cv::Mat> &pyr2,
-            const vector<cv::Point2f> &kpt1,
-            vector<cv::Point2f> &kpt2,
+            const vector<mynt::Point2f> &kpt1,
+            vector<mynt::Point2f> &kpt2,
             vector<unsigned char> &success,
             int path_size,
             int max_iters,
@@ -127,23 +127,23 @@ namespace mynt {
         // parameters
         int pyramids = pyr1.size();
 
-        double pyramid_scale = pyr1[1].cols / (double)pyr1[0].cols; // <=1
+        float pyramid_scale = pyr1[1].cols / (double)pyr1[0].cols; // <=1
 
         bool have_initial = !kpt2.empty();
 
         // coarse-to-fine LK tracking in pyramids
         size_t size_kp1 = kpt1.size();
-        vector<cv::Point2f> kpt1_top;
+        vector<mynt::Point2f> kpt1_top;
         kpt1_top.reserve(size_kp1);
         for (int i = 0; i<size_kp1; i++) {
-            cv::Point2f kpt = kpt1[i];
-            kpt *= std::pow(pyramid_scale, pyramids-1);
+            mynt::Point2f kpt = kpt1[i];
+            kpt *= (float)std::pow(pyramid_scale, pyramids-1);
             kpt1_top.push_back(kpt);
         }
         if(have_initial) {
             for (int i = 0; i<kpt2.size(); i++) {
-                cv::Point2f &kpt = kpt2[i];
-                kpt *= std::pow(pyramid_scale, pyramids-1);
+                mynt::Point2f &kpt = kpt2[i];
+                kpt *= (float)std::pow(pyramid_scale, pyramids-1);
             }
         }
         for (int l=pyramids-1; l>=0; l--) {

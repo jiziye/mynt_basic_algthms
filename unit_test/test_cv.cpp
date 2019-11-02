@@ -69,14 +69,15 @@ TEST(CornerDetector, detect_features)
 {
     cv::Mat mat_src = cv::imread("../data/lena.bmp", cv::ImreadModes::IMREAD_GRAYSCALE);
 
-    std::vector<cv::Point2f> new_features;
+    std::vector<mynt::Point2f> new_features;
+    std::vector<double> nm_scores;
     mynt::CornerDetector detector;
-    detector.detect_features(mat_src, new_features);
+    detector.detect_features(mat_src, new_features, nm_scores);
 
     cv::Mat mat_dst(mat_src.rows, mat_src.cols, CV_8UC3);
     cv::cvtColor(mat_src, mat_dst, CV_GRAY2BGR);
     for (const auto &pt : new_features) {
-        cv::circle(mat_dst, pt, 3, cv::Scalar(0, 255, 0), -1);
+        cv::circle(mat_dst, cv::Point2f(pt.x, pt.y), 3, cv::Scalar(0, 255, 0), -1);
     }
     cv::imshow("CornerDetector FAST", mat_dst);
     cv::waitKey(1000);

@@ -7,6 +7,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "cv/types.h"
+
 namespace mynt {
 
     using namespace std;
@@ -23,8 +25,8 @@ namespace mynt {
     void OpticalFlowSingleLevel(
             const cv::Mat &img1,
             const cv::Mat &img2,
-            const vector <cv::Point2f> &kpt1,
-            vector <cv::Point2f> &kpt2,
+            const vector <mynt::Point2f> &kpt1,
+            vector <mynt::Point2f> &kpt2,
             vector<unsigned char> &success,
             int path_size = 7,
             int max_iters = 10,
@@ -44,8 +46,8 @@ namespace mynt {
     void OpticalFlowMultiLevel(
             const vector <cv::Mat> &pyr1,
             const vector <cv::Mat> &pyr2,
-            const vector <cv::Point2f> &kpt1,
-            vector <cv::Point2f> &kpt2,
+            const vector <mynt::Point2f> &kpt1,
+            vector <mynt::Point2f> &kpt2,
             vector<unsigned char> &success,
             int path_size = 7,
             int max_iters = 10,

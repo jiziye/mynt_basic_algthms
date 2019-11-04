@@ -75,10 +75,13 @@ TEST(CornerDetector, detect_features)
 {
     cv::Mat mat_src = cv::imread("../data/lena.bmp", cv::ImreadModes::IMREAD_GRAYSCALE);
 
+    mynt::YImg8 yimg_src(mat_src.rows, mat_src.cols);
+    memcpy(yimg_src.data(), mat_src.data, yimg_src.size().area());
+
     std::vector<mynt::Point2f> new_features;
     std::vector<double> nm_scores;
     mynt::CornerDetector detector;
-    detector.detect_features(mat_src, new_features, nm_scores);
+    detector.detect_features(yimg_src, new_features, nm_scores);
 
     cv::Mat mat_dst(mat_src.rows, mat_src.cols, CV_8UC3);
     cv::cvtColor(mat_src, mat_dst, CV_GRAY2BGR);
@@ -121,6 +124,12 @@ TEST(VisualTracking, optical_flow) {
     cv::Mat mat_src_01 = cv::imread("../data/optical_flow_01.png", cv::ImreadModes::IMREAD_GRAYSCALE);
     cv::Mat mat_src_02 = cv::imread("../data/optical_flow_02.png", cv::ImreadModes::IMREAD_GRAYSCALE);
 
+    mynt::YImg8 yimg_src_01(mat_src_01.rows, mat_src_01.cols);
+    memcpy(yimg_src_01.data(), mat_src_01.data, yimg_src_01.size().area());
+    mynt::YImg8 yimg_src_02(mat_src_02.rows, mat_src_02.cols);
+    memcpy(yimg_src_02.data(), mat_src_02.data, yimg_src_02.size().area());
+
+    /// detect Features
     std::vector<cv::KeyPoint> kp1;
     cv::Ptr<cv::GFTTDetector> detector = cv::GFTTDetector::create(500, 0.01, 20); // maximum 500 keypoints
     detector->detect(mat_src_01, kp1);
@@ -132,7 +141,7 @@ TEST(VisualTracking, optical_flow) {
         mynt_pt1.push_back(mynt::Point2f(kp.pt.x, kp.pt.y));
     }
 
-    /// use opencv's multi-level pyramids lk optical flow
+    /// use opencv's multi-level pyramids lk optical flow cv::calcOpticalFlowPyrLK
     std::vector<cv::Mat> img1_pyramid, img2_pyramid;
     cv::buildOpticalFlowPyramid(mat_src_01, img1_pyramid, cv::Size(15, 15), 3, true, cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT, false);
     cv::buildOpticalFlowPyramid(mat_src_02, img2_pyramid, cv::Size(15, 15), 3, true, cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT, false);
@@ -143,32 +152,20 @@ TEST(VisualTracking, optical_flow) {
             img1_pyramid, img2_pyramid, cv_pt1, cv_pt2_multi, status_multi, cv::noArray(), cv::Size(15, 15), 3,
             cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 30, 0.01));
 
-    /// then test multi-level LK
-    // create pyramids
-    std::vector<cv::Mat> pyr1, pyr2; // image pyramids
-    cv::Mat tmp1, tmp2;
-#if 1
+    /// mynt::OpticalFlowMultiLevel
+    std::vector<mynt::YImg8> pyr1, pyr2; // image pyramids
+    mynt::YImg8 tmp1, tmp2;
     for (int i = 0; i < 4; i++) {
         if(i == 0) {
-            pyr1.push_back(mat_src_01);
-            pyr2.push_back(mat_src_02);
+            pyr1.push_back(yimg_src_01);
+            pyr2.push_back(yimg_src_02);
             continue;
         }
-        cv::pyrDown(pyr1[i-1], tmp1, pyr1[i-1].size() / 2);
+        mynt::pyr_down(pyr1[i-1], tmp1);
+        mynt::pyr_down(pyr2[i-1], tmp2);
         pyr1.push_back(tmp1);
-        cv::pyrDown(pyr2[i-1], tmp2, pyr2[i-1].size() / 2);
         pyr2.push_back(tmp2);
     }
-#else
-    double scale = 1.0;
-    for (int i = 0; i < 4; i++) {
-        cv::resize(mat_src_01, tmp1, cv::Size(mat_src_01.cols * scale, mat_src_01.rows * scale));
-        pyr1.push_back(tmp1);
-        cv::resize(mat_src_02, tmp2, cv::Size(mat_src_02.cols * scale, mat_src_02.rows * scale));
-        pyr2.push_back(tmp2);
-        scale *= 0.5;
-    }
-#endif
     std::vector<mynt::Point2f> kp2_multi;
     std::vector<unsigned char> success_multi;
     mynt::OpticalFlowMultiLevel(pyr1, pyr2, mynt_pt1, kp2_multi, success_multi, 15, 30);

@@ -5,11 +5,10 @@
 #ifndef MSCKF_VIO_MYNT_CORNER_DETECTOR_H
 #define MSCKF_VIO_MYNT_CORNER_DETECTOR_H
 
-#include <opencv2/core/core.hpp>
-
 #include <fast/fast.h>
 
 #include "cv/types.h"
+#include "cv/yimg.h"
 
 namespace mynt {
 
@@ -19,7 +18,7 @@ namespace mynt {
 
         ~CornerDetector() {};
 
-        void detect_features(const cv::Mat &image, std::vector<mynt::Point2f> &features, std::vector<double> &nm_scores);
+        void detect_features(const mynt::YImg8 &image, std::vector<mynt::Point2f> &features, std::vector<double> &nm_scores);
 
         void set_grid_position(const mynt::Point2f &pos);
 
@@ -29,7 +28,7 @@ namespace mynt {
 
         int get_n_cols() { return grid_n_cols_; }
 
-        float shiTomasiScore(const cv::Mat &img, int u, int v);
+        float shiTomasiScore(const mynt::YImg8 &img, int u, int v);
 
         int sub2ind(const mynt::Point2f &sub);
 

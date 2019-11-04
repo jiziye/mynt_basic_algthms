@@ -5,13 +5,13 @@
 #ifndef MSCKF_VIO_MYNT_VISUAL_TRACKING_H
 #define MSCKF_VIO_MYNT_VISUAL_TRACKING_H
 
-#include <opencv2/opencv.hpp>
+#include <cmath>
+#include <vector>
 
 #include "cv/types.h"
+#include "cv/yimg.h"
 
 namespace mynt {
-
-    using namespace std;
 
     /**
      * single level optical flow
@@ -23,11 +23,11 @@ namespace mynt {
      * @param [in] inverse use inverse formulation?
      */
     void OpticalFlowSingleLevel(
-            const cv::Mat &img1,
-            const cv::Mat &img2,
-            const vector <mynt::Point2f> &kpt1,
-            vector <mynt::Point2f> &kpt2,
-            vector<unsigned char> &success,
+            const mynt::YImg8 &img1,
+            const mynt::YImg8 &img2,
+            const std::vector <mynt::Point2f> &kpt1,
+            std::vector <mynt::Point2f> &kpt2,
+            std::vector<unsigned char> &success,
             int path_size = 7,
             int max_iters = 10,
             bool inverse = false
@@ -44,11 +44,11 @@ namespace mynt {
      * @param [in] inverse set true to enable inverse formulation
      */
     void OpticalFlowMultiLevel(
-            const vector <cv::Mat> &pyr1,
-            const vector <cv::Mat> &pyr2,
-            const vector <mynt::Point2f> &kpt1,
-            vector <mynt::Point2f> &kpt2,
-            vector<unsigned char> &success,
+            const std::vector<mynt::YImg8> &pyr1,
+            const std::vector<mynt::YImg8> &pyr2,
+            const std::vector<mynt::Point2f> &kpt1,
+            std::vector<mynt::Point2f> &kpt2,
+            std::vector<unsigned char> &success,
             int path_size = 7,
             int max_iters = 10,
             bool inverse = true
@@ -61,15 +61,18 @@ namespace mynt {
      * @param y
      * @return
      */
-    inline float GetPixelValue(const cv::Mat &img, float x, float y) {
-        uchar *data = &img.data[int(y) * img.step + int(x)];
-        float xx = x - floor(x);
-        float yy = y - floor(y);
+    inline float GetPixelValue(const mynt::YImg8 &img, float x, float y) {
+        const int lx = std::floor(x);
+        const int ly = std::floor(y);
+        if (lx < 0 || ly < 0 || lx+1 >= img.cols() || ly+1 >= img.rows())
+            return 0.f;
+        float xx = x - lx;
+        float yy = y - ly;
         return float(
-                (1 - xx) * (1 - yy) * data[0] +
-                xx * (1 - yy) * data[1] +
-                (1 - xx) * yy * data[img.step] +
-                xx * yy * data[img.step + 1]
+                (1 - xx) * (1 - yy) * img(ly, lx) +
+                xx * (1 - yy) * img(ly, lx + 1) +
+                (1 - xx) * yy * img(ly + 1, lx) +
+                xx * yy * img(ly + 1, lx + 1)
         );
     }
 

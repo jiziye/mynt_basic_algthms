@@ -10,11 +10,11 @@
 namespace mynt {
 
     void OpticalFlowSingleLevel(
-            const cv::Mat &img1,
-            const cv::Mat &img2,
-            const vector<mynt::Point2f> &kpt1,
-            vector<mynt::Point2f> &kpt2,
-            vector<unsigned char> &success,
+            const mynt::YImg8 &img1,
+            const mynt::YImg8 &img2,
+            const std::vector<mynt::Point2f> &kpt1,
+            std::vector<mynt::Point2f> &kpt2,
+            std::vector<unsigned char> &success,
             int path_size,
             int max_iters,
             bool inverse
@@ -44,8 +44,8 @@ namespace mynt {
                 Eigen::Vector2d b = Eigen::Vector2d::Zero();
                 cost = 0;
 
-                if (kpt.x + dx <= half_patch_size || kpt.x + dx >= img1.cols - half_patch_size ||
-                    kpt.y + dy <= half_patch_size || kpt.y + dy >= img1.rows - half_patch_size) {   // go outside
+                if (kpt.x + dx <= half_patch_size || kpt.x + dx >= img1.cols() - half_patch_size ||
+                    kpt.y + dy <= half_patch_size || kpt.y + dy >= img1.rows() - half_patch_size) {   // go outside
                     succ = 0;
                     break;
                 }
@@ -83,9 +83,9 @@ namespace mynt {
                 Eigen::Vector2d update;
                 update = H.ldlt().solve(b);
 
-                if (isnan(update[0])) {
+                if (std::isnan(update[0])) {
                     // sometimes occurred when we have a black or white patch and H is irreversible
-                    cout << "update is nan" << endl;
+                    std::cout << "update is nan" << std::endl;
                     succ = 0;
                     break;
                 }
@@ -115,11 +115,11 @@ namespace mynt {
     }
 
     void OpticalFlowMultiLevel(
-            const vector<cv::Mat> &pyr1,
-            const vector<cv::Mat> &pyr2,
-            const vector<mynt::Point2f> &kpt1,
-            vector<mynt::Point2f> &kpt2,
-            vector<unsigned char> &success,
+            const std::vector<mynt::YImg8> &pyr1,
+            const std::vector<mynt::YImg8> &pyr2,
+            const std::vector<mynt::Point2f> &kpt1,
+            std::vector<mynt::Point2f> &kpt2,
+            std::vector<unsigned char> &success,
             int path_size,
             int max_iters,
             bool inverse) {
@@ -127,13 +127,13 @@ namespace mynt {
         // parameters
         int pyramids = pyr1.size();
 
-        float pyramid_scale = pyr1[1].cols / (double)pyr1[0].cols; // <=1
+        float pyramid_scale = pyr1[1].cols() / (double)pyr1[0].cols(); // <=1
 
         bool have_initial = !kpt2.empty();
 
         // coarse-to-fine LK tracking in pyramids
         size_t size_kp1 = kpt1.size();
-        vector<mynt::Point2f> kpt1_top;
+        std::vector<mynt::Point2f> kpt1_top;
         kpt1_top.reserve(size_kp1);
         for (int i = 0; i<size_kp1; i++) {
             mynt::Point2f kpt = kpt1[i];

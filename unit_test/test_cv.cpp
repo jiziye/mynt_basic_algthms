@@ -61,7 +61,8 @@ TEST(YImg, copy)
     memcpy(yimg_src.data(), mat_src.data, yimg_src.size().area());
 
     mynt::YImg8 yimg_dst(yimg_src.size());
-    yimg_src.copy(yimg_dst);
+//    yimg_src.copy(yimg_dst);
+    yimg_dst = yimg_src;
 
     cv::Mat mat_dst;
     mat_dst.create(mat_src.rows, mat_src.cols, CV_8UC1);

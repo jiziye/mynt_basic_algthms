@@ -10,7 +10,7 @@ ELSE()
   SET(IS_ARM FALSE)
 ENDIF()
 
-SET(BUILD_TEST TRUE)
+option(BUILD_TEST "build example test" OFF)
 
 #######################################
 SET(PROJECT_NAME fast)

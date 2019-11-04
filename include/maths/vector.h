@@ -22,7 +22,7 @@ namespace mynt {
 
         VectorX(int n) : Matrix(n, 1) {}
 
-        VectorX(const Matrix &mat) : Matrix(mat) { assert(mat.n == 1); }
+        VectorX(const Matrix &mat) : Matrix(mat) { assert(mat.cols() == 1); }
 
         FLOAT &operator[](int idx) { return (*this)(idx, 0); }
 
@@ -70,7 +70,7 @@ namespace mynt {
 
         Vector(const FLOAT *val) : Matrix(_N, 1, val) {}
 
-        Vector(const Matrix &mat) : Matrix(mat) { assert(mat.m ==_N && mat.n == 1); }
+        Vector(const Matrix &mat) : Matrix(mat) { assert(mat.rows() ==_N && mat.cols() == 1); }
 
         FLOAT &operator[](int idx) { return (*this)(idx, 0); }
 
@@ -163,7 +163,7 @@ namespace mynt {
      */
     template<unsigned int _M, unsigned int _N>
     static Vector<_M> operator*(const Matrix &M, const Vector<_N> &V) {
-        assert(M.n == V.size() && M.m == _M);
+        assert(M.cols() == V.size() && M.rows() == _M);
         Vector<_M> v;
         for(int i=0; i<M.rows(); ++i) {
             FLOAT sum_i = 0.0;

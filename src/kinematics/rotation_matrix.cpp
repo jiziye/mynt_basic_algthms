@@ -13,7 +13,7 @@ namespace mynt {
 
     RotationMatrix::RotationMatrix(const Matrix &mat) : Matrix(mat) {
         // TODO: det == 1, RRT == I
-        assert(mat.m == 3 && mat.n == 3);
+        assert(mat.rows() == 3 && mat.cols() == 3);
     }
 
     RotationMatrix RotationMatrix::rot_mat_x(const FLOAT &angle) {

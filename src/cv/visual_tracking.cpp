@@ -33,42 +33,66 @@ namespace mynt {
             double cost = 0, lastCost = 0;
             bool succ = 1; // indicate if this point succeeded
 
+            Eigen::Vector2d Jf; // forward J
+            std::vector<Eigen::Vector2d> vJ; // inverse
+            Eigen::Matrix2d H = Eigen::Matrix2d::Zero();
+            Eigen::Vector2d b = Eigen::Vector2d::Zero();
+
+            // pre-compute J and H for Inverse Composition
+            if (inverse) {
+                Eigen::Vector2d Ji;
+                for (int x = -half_patch_size; x < half_patch_size; x++) {
+                    for (int y = -half_patch_size; y < half_patch_size; y++) {
+                        float xf = kpt.x + x;
+                        float yf = kpt.y + y;
+                        // Inverse Jacobian
+                        // NOTE this J does not change when dx, dy is updated, so we can store it and only compute error
+                        Ji[0] = (get_pixel_value(img1, xf + 1, yf) - get_pixel_value(img1, xf - 1, yf)) / 2;
+                        Ji[1] = (get_pixel_value(img1, xf, yf + 1) - get_pixel_value(img1, xf, yf - 1)) / 2;
+                        H += Ji * Ji.transpose();
+                        vJ.push_back(Ji);
+                    }
+                }
+            }
+
             // Gauss-Newton iterations
             for (int iter = 0; iter < max_iters; iter++) {
-                Eigen::Matrix2d H = Eigen::Matrix2d::Zero();
-                Eigen::Vector2d b = Eigen::Vector2d::Zero();
                 cost = 0;
 
                 if (kpt.x + dx <= half_patch_size || kpt.x + dx >= img1.cols() - half_patch_size ||
-                    kpt.y + dy <= half_patch_size || kpt.y + dy >= img1.rows() - half_patch_size) {   // go outside
+                    kpt.y + dy <= half_patch_size || kpt.y + dy >= img1.rows() - half_patch_size) {
                     succ = 0;
                     break;
                 }
 
+                if(inverse)
+                    b = Eigen::Vector2d::Zero();
+                else {
+                    H = Eigen::Matrix2d::Zero();
+                    b = Eigen::Vector2d::Zero();
+                }
+
+                int n = 0;
                 for (int x = -half_patch_size; x < half_patch_size; x++) {
                     for (int y = -half_patch_size; y < half_patch_size; y++) {
                         float xf = kpt.x + x;
                         float yf = kpt.y + y;
 
-                        Eigen::Vector2d J;
-                        if (!inverse) {
-                            // Forward Jacobian
-                            J[0] = (get_pixel_value(img2, xf + dx + 1, yf + dy) -
-                                    get_pixel_value(img2, xf + dx - 1, yf + dy)) / 2;
-                            J[1] = (get_pixel_value(img2, xf + dx, yf + dy + 1) -
-                                    get_pixel_value(img2, xf + dx, yf + dy - 1)) / 2;
-                        } else {
-                            // Inverse Jacobian
-                            // NOTE this J does not change when dx, dy is updated, so we can store it and only compute error
-                            J[0] = (get_pixel_value(img1, xf + 1, yf) - get_pixel_value(img1, xf - 1, yf)) / 2;
-                            J[1] = (get_pixel_value(img1, xf, yf + 1) - get_pixel_value(img1, xf, yf - 1)) / 2;
-                        }
-
                         double error = get_pixel_value(img2, xf + dx, yf + dy) - get_pixel_value(img1, xf, yf);
-                        H += J * J.transpose();
-                        b += -J.transpose() * error;
 
                         cost += error * error;
+
+                        if (inverse) {
+                            b += -vJ[n].transpose() * error;
+                            n++;
+                        } else {
+                            Jf[0] = (get_pixel_value(img2, xf + dx + 1, yf + dy) -
+                                    get_pixel_value(img2, xf + dx - 1, yf + dy)) / 2;
+                            Jf[1] = (get_pixel_value(img2, xf + dx, yf + dy + 1) -
+                                    get_pixel_value(img2, xf + dx, yf + dy - 1)) / 2;
+                            H += Jf * Jf.transpose();
+                            b += -Jf.transpose() * error;
+                        }
                     }
                 }
 
@@ -92,7 +116,6 @@ namespace mynt {
 
             success.push_back(succ);
 
-            // set kpt2
             if (have_initial) {
                 kpt2[i] = kpt + mynt::Point2f(dx, dy);
             } else {

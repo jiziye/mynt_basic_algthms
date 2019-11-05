@@ -22,7 +22,7 @@ namespace mynt {
      * @param [out] success true if a keypoint is tracked successfully
      * @param [in] inverse use inverse formulation?
      */
-    void OpticalFlowSingleLevel(
+    void optical_flow_single_level(
             const mynt::YImg8 &img1,
             const mynt::YImg8 &img2,
             const std::vector <mynt::Point2f> &kpt1,
@@ -43,7 +43,7 @@ namespace mynt {
      * @param [out] success true if a keypoint is tracked successfully
      * @param [in] inverse set true to enable inverse formulation
      */
-    void OpticalFlowMultiLevel(
+    void optical_flow_multi_level(
             const std::vector<mynt::YImg8> &pyr1,
             const std::vector<mynt::YImg8> &pyr2,
             const std::vector<mynt::Point2f> &kpt1,
@@ -61,7 +61,7 @@ namespace mynt {
      * @param y
      * @return
      */
-    inline float GetPixelValue(const mynt::YImg8 &img, float x, float y) {
+    inline float get_pixel_value(const mynt::YImg8 &img, float x, float y) {
         const int lx = std::floor(x);
         const int ly = std::floor(y);
         if (lx < 0 || ly < 0 || lx+1 >= img.cols() || ly+1 >= img.rows())

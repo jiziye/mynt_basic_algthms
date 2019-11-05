@@ -169,7 +169,7 @@ TEST(VisualTracking, optical_flow) {
     }
     std::vector<mynt::Point2f> kp2_multi;
     std::vector<unsigned char> success_multi;
-    mynt::OpticalFlowMultiLevel(pyr1, pyr2, mynt_pt1, kp2_multi, success_multi, 15, 30);
+    mynt::optical_flow_multi_level(pyr1, pyr2, mynt_pt1, kp2_multi, success_multi, 15, 30);
 
     /// write
     std::ofstream out_file("debug_optical_flow.txt");

@@ -9,26 +9,21 @@
 
 namespace mynt {
 
-    void OpticalFlowSingleLevel(
-            const mynt::YImg8 &img1,
-            const mynt::YImg8 &img2,
-            const std::vector<mynt::Point2f> &kpt1,
-            std::vector<mynt::Point2f> &kpt2,
+    void optical_flow_single_level(
+            const mynt::YImg8 &img1, const mynt::YImg8 &img2,
+            const std::vector<mynt::Point2f> &kpt1, std::vector<mynt::Point2f> &kpt2,
             std::vector<unsigned char> &success,
-            int path_size,
-            int max_iters,
-            bool inverse
+            int path_size, int max_iters, bool inverse
     ) {
-        // parameters
         int half_patch_size = path_size / 2 + 1;
-        int iterations = max_iters;
         bool have_initial = !kpt2.empty();
 
-        if(!success.empty())
+        if (!success.empty())
             success.clear();
 
         for (size_t i = 0; i < kpt1.size(); i++) {
             auto kpt = kpt1[i];
+
             double dx = 0, dy = 0; // dx,dy need to be estimated
             if (have_initial) {
                 dx = kpt2[i].x - kpt.x;
@@ -39,7 +34,7 @@ namespace mynt {
             bool succ = 1; // indicate if this point succeeded
 
             // Gauss-Newton iterations
-            for (int iter = 0; iter < iterations; iter++) {
+            for (int iter = 0; iter < max_iters; iter++) {
                 Eigen::Matrix2d H = Eigen::Matrix2d::Zero();
                 Eigen::Vector2d b = Eigen::Vector2d::Zero();
                 cost = 0;
@@ -50,51 +45,45 @@ namespace mynt {
                     break;
                 }
 
-                // compute cost and jacobian
                 for (int x = -half_patch_size; x < half_patch_size; x++) {
                     for (int y = -half_patch_size; y < half_patch_size; y++) {
-
-                        double error = 0;
-                        Eigen::Vector2d J;  // Jacobian
-
                         float xf = kpt.x + x;
                         float yf = kpt.y + y;
 
-                        if (inverse == false) {
+                        Eigen::Vector2d J;
+                        if (!inverse) {
                             // Forward Jacobian
-                            J[0] = (GetPixelValue(img2, xf + dx + 1, yf + dy) - GetPixelValue(img2, xf + dx - 1, yf + dy)) / 2;
-                            J[1] = (GetPixelValue(img2, xf + dx, yf + dy + 1) - GetPixelValue(img2, xf + dx, yf + dy - 1)) / 2;
+                            J[0] = (get_pixel_value(img2, xf + dx + 1, yf + dy) -
+                                    get_pixel_value(img2, xf + dx - 1, yf + dy)) / 2;
+                            J[1] = (get_pixel_value(img2, xf + dx, yf + dy + 1) -
+                                    get_pixel_value(img2, xf + dx, yf + dy - 1)) / 2;
                         } else {
                             // Inverse Jacobian
                             // NOTE this J does not change when dx, dy is updated, so we can store it and only compute error
-                            J[0] = (GetPixelValue(img1, xf + 1, yf) - GetPixelValue(img1, xf - 1, yf)) / 2;
-                            J[1] = (GetPixelValue(img1, xf, yf + 1) - GetPixelValue(img1, xf, yf - 1)) / 2;
+                            J[0] = (get_pixel_value(img1, xf + 1, yf) - get_pixel_value(img1, xf - 1, yf)) / 2;
+                            J[1] = (get_pixel_value(img1, xf, yf + 1) - get_pixel_value(img1, xf, yf - 1)) / 2;
                         }
 
-                        // compute H, b and set cost;
-                        error = GetPixelValue(img2, xf + dx, yf + dy) - GetPixelValue(img1, xf, yf);
-                        H +=  J * J.transpose();
+                        double error = get_pixel_value(img2, xf + dx, yf + dy) - get_pixel_value(img1, xf, yf);
+                        H += J * J.transpose();
                         b += -J.transpose() * error;
+
                         cost += error * error;
                     }
                 }
 
-                // compute update
-                Eigen::Vector2d update;
-                update = H.ldlt().solve(b);
+                Eigen::Vector2d update = H.ldlt().solve(b);
 
                 if (std::isnan(update[0])) {
                     // sometimes occurred when we have a black or white patch and H is irreversible
-                    std::cout << "update is nan" << std::endl;
                     succ = 0;
                     break;
                 }
+
                 if (iter > 0 && cost > lastCost) {
-//                    cout << "cost increased: " << cost << ", " << lastCost << endl;
                     break;
                 }
 
-                // update dx, dy
                 dx += update[0];
                 dy += update[1];
                 lastCost = cost;
@@ -103,18 +92,16 @@ namespace mynt {
 
             success.push_back(succ);
 
-            // set kp2
+            // set kpt2
             if (have_initial) {
                 kpt2[i] = kpt + mynt::Point2f(dx, dy);
             } else {
-                mynt::Point2f tracked = kpt;
-                tracked += mynt::Point2f(dx, dy);
-                kpt2.push_back(tracked);
+                kpt2.push_back(kpt + mynt::Point2f(dx, dy));
             }
         }
     }
 
-    void OpticalFlowMultiLevel(
+    void optical_flow_multi_level(
             const std::vector<mynt::YImg8> &pyr1,
             const std::vector<mynt::YImg8> &pyr2,
             const std::vector<mynt::Point2f> &kpt1,
@@ -153,7 +140,7 @@ namespace mynt {
                     kpt2[i] /= pyramid_scale;
                 }
             }
-            OpticalFlowSingleLevel(pyr1[l], pyr2[l], kpt1_top, kpt2, success, path_size, max_iters, inverse);
+            optical_flow_single_level(pyr1[l], pyr2[l], kpt1_top, kpt2, success, path_size, max_iters, inverse);
         }
     }
 }

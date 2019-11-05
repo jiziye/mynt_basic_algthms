@@ -56,7 +56,7 @@
 
 * Data Structure & Methods
   - [x] Size
-  - [ ] Point2
+  - [x] Point2
   - [ ] RGB
 * 2D Image & Methods
   - [ ] YImg class
@@ -64,18 +64,18 @@
     - [ ] ROI Extraction
     - [ ] Zoom In & Out
     - [ ] Mean Filter
-    - [ ] Gaussian Filter
-    - [ ] Image Pyramid
+    - [x] Gaussian Filter
+    - [x] Image Pyramid
 * 2D Features
   - Key Points
-    - [ ] FAST
+    - [x] FAST
     - [ ] ORB
   - Discriptors
   - Line
     - [ ] Edge
     - [ ] Straight Line
 * 3D PointCloud
-  - [ ] Point3
+  - [x] Point3
   - [ ] PointCloud
 * Camera
   - [ ] Camera Models
@@ -89,7 +89,7 @@
 
 **Note**: approximate treatment about **small angle**.
 
-* [ ] Rotation Matrix
-* [ ] Quarternion (Hamilton)
-* [ ] Euler Angle
-* [ ] Convertor
+* [x] Rotation Matrix
+* [x] Quarternion (Hamilton)
+* [x] Euler Angle
+* [x] Convertor

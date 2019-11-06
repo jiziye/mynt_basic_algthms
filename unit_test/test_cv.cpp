@@ -3,6 +3,7 @@
 //
 
 #include <fstream>
+#include <chrono>
 
 #include <gtest/gtest.h>
 
@@ -147,11 +148,14 @@ TEST(VisualTracking, optical_flow) {
     cv::buildOpticalFlowPyramid(mat_src_01, img1_pyramid, cv::Size(15, 15), 3, true, cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT, false);
     cv::buildOpticalFlowPyramid(mat_src_02, img2_pyramid, cv::Size(15, 15), 3, true, cv::BORDER_REFLECT_101, cv::BORDER_CONSTANT, false);
 
+    auto start_time = std::chrono::steady_clock::now();
     std::vector<cv::Point2f> cv_pt2_multi;
     std::vector<uchar> status_multi;
     cv::calcOpticalFlowPyrLK(
             img1_pyramid, img2_pyramid, cv_pt1, cv_pt2_multi, status_multi, cv::noArray(), cv::Size(15, 15), 3,
             cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 30, 0.01));
+    auto end_time = std::chrono::steady_clock::now();
+    std::cout << "time calcOpticalFlowPyrLK: " << std::chrono::duration<double>(end_time-start_time).count() << " s" << std::endl;
 
     /// mynt::OpticalFlowMultiLevel
     std::vector<mynt::YImg8> pyr1, pyr2; // image pyramids
@@ -167,9 +171,12 @@ TEST(VisualTracking, optical_flow) {
         pyr1.push_back(tmp1);
         pyr2.push_back(tmp2);
     }
+    start_time = std::chrono::steady_clock::now();
     std::vector<mynt::Point2f> kp2_multi;
     std::vector<unsigned char> success_multi;
     mynt::optical_flow_multi_level(pyr1, pyr2, mynt_pt1, kp2_multi, success_multi, 15, 30);
+    end_time = std::chrono::steady_clock::now();
+    std::cout << "time optical_flow_multi_level: " << std::chrono::duration<double>(end_time-start_time).count() << " s" << std::endl;
 
     /// write
     std::ofstream out_file("debug_optical_flow.txt");

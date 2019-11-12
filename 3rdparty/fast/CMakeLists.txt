@@ -10,8 +10,6 @@ ELSE()
   SET(IS_ARM FALSE)
 ENDIF()
 
-option(BUILD_TEST "build example test" OFF)
-
 #######################################
 SET(PROJECT_NAME fast)
 PROJECT(${PROJECT_NAME})
@@ -41,15 +39,6 @@ ENDIF()
 # Add library
 INCLUDE_DIRECTORIES(include src)
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCES})
-
-# Add Tests
-IF(BUILD_TEST)
-  MESSAGE("Building Fast Test")
-  FIND_PACKAGE(OpenCV REQUIRED COMPONENTS core highgui imgproc)
-  ADD_DEFINITIONS(-DTEST_DATA_DIR=\"${PROJECT_SOURCE_DIR}/test/data\")
-  ADD_EXECUTABLE(fast_test test/test.cpp)
-  TARGET_LINK_LIBRARIES(fast_test ${OpenCV_LIBS} ${PROJECT_NAME})
-ENDIF()
 
 
 ################################################################################

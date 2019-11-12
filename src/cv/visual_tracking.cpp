@@ -4,8 +4,10 @@
 
 #include "cv/visual_tracking.h"
 
-#include <Eigen/Core>
-#include <Eigen/Dense>
+//#include <Eigen/Core>
+//#include <Eigen/Dense>
+
+#include "maths/vector.h"
 
 namespace mynt {
 
@@ -33,14 +35,14 @@ namespace mynt {
             double cost = 0, lastCost = 0;
             bool succ = 1; // indicate if this point succeeded
 
-            Eigen::Vector2d Jf; // forward J
-            std::vector<Eigen::Vector2d> vJ; // inverse
-            Eigen::Matrix2d H = Eigen::Matrix2d::Zero();
-            Eigen::Vector2d b = Eigen::Vector2d::Zero();
+            mynt::Vector2 Jf; // forward J
+            std::vector<mynt::Vector2> vJ; // inverse
+            mynt::Matrix H(2, 2);
+            mynt::Vector2 b;
 
             // pre-compute J and H for Inverse Composition
             if (inverse) {
-                Eigen::Vector2d Ji;
+                mynt::Vector2 Ji;
                 for (int x = -half_patch_size; x < half_patch_size; x++) {
                     for (int y = -half_patch_size; y < half_patch_size; y++) {
                         float xf = kpt.x + x;
@@ -66,10 +68,10 @@ namespace mynt {
                 }
 
                 if(inverse)
-                    b = Eigen::Vector2d::Zero();
+                    b = mynt::Vector2();
                 else {
-                    H = Eigen::Matrix2d::Zero();
-                    b = Eigen::Vector2d::Zero();
+                    H = mynt::Matrix(2, 2);
+                    b = mynt::Vector2();
                 }
 
                 int n = 0;
@@ -83,7 +85,7 @@ namespace mynt {
                         cost += error * error;
 
                         if (inverse) {
-                            b += -vJ[n].transpose() * error;
+                            b += -vJ[n] * error;
                             n++;
                         } else {
                             Jf[0] = (get_pixel_value(img2, xf + dx + 1, yf + dy) -
@@ -91,12 +93,12 @@ namespace mynt {
                             Jf[1] = (get_pixel_value(img2, xf + dx, yf + dy + 1) -
                                     get_pixel_value(img2, xf + dx, yf + dy - 1)) / 2;
                             H += Jf * Jf.transpose();
-                            b += -Jf.transpose() * error;
+                            b += -Jf * error;
                         }
                     }
                 }
 
-                Eigen::Vector2d update = H.ldlt().solve(b);
+                mynt::Vector2 update = mynt::solve_ldlt(H, b);
 
                 if (std::isnan(update[0])) {
                     // sometimes occurred when we have a black or white patch and H is irreversible

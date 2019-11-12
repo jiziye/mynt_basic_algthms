@@ -183,6 +183,8 @@ namespace mynt {
     Matrix vec2mat(const Vector2 &v1, const Vector2 &v2);
 
     Matrix vec2mat(const VectorX &v1, const VectorX &v2);
+
+    VectorX solve_ldlt(const Matrix &A, const VectorX &b);
 }
 
 #endif //MYNT_BASIC_ALGTHMS_VECTOR_H

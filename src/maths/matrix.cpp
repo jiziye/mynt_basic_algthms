@@ -744,6 +744,88 @@ namespace mynt {
         free(sv);
     }
 
+    void Matrix::ldlt01(mynt::Matrix &L, mynt::Matrix &D) {
+        if (this->cols() != this->rows())
+            return;
+
+        Matrix A = *this;
+        int n = A.rows();
+
+        FLOAT v[n];
+        FLOAT d[n];
+
+        L = Matrix(n, n);
+        D = Matrix(n, n);
+
+        for (int i = 0; i < n; i++) {
+            if (i > 0) {
+                FLOAT tmp = 0.0;
+                for (int j = 0; j < i - 1; j++) {
+                    v[j] = L(i, j) * d[j];
+                    tmp += L(i, j) * v[j];
+                }
+                d[i] = v[i] = A(i, i) - tmp;
+                if (i < n - 1) {
+                    for (int j = i + 1; j < n; j++) {
+                        tmp = 0.0;
+                        for (int k = 0; k < i - 1; k++)
+                            tmp += L(j, k) * v[k];
+                        L(j, i) = (A(j, i) - tmp) / v[i];
+                    }
+                }
+            } else {
+                d[0] = v[0] = A(0, 0);
+                for (int j = 1; j < n; j++)
+                    L(j, 0) = A(j, 0) / v[0];
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            D(i, i) = d[i];
+        }
+        L = L + Matrix::eye(n);
+    }
+
+    void Matrix::ldlt(mynt::Matrix &L, mynt::Matrix &D) const {
+        if (this->cols() != this->rows())
+            return;
+
+        Matrix A = *this;
+        int size = A.rows();
+
+        double r[size];
+
+        L = Matrix(size, size);
+        D = Matrix(size, size);
+
+        for (int k = 0; k < size; k++) {
+            for (int p = 0; p <= k - 1; p++) {
+                r[p] = A(p, p) * A(k, p);
+            }
+            for (int p = 0; p <= k - 1; p++) {
+                A(k, k) -= A(k, p) * r[p];
+            }
+            for (int i = k + 1; i < size; i++) {
+                double sum = 0.0;
+                for (int p = 0; p < k; p++) {
+                    sum += A(i, p) * r[p];
+                }
+                A(i, k) = (A(i, k) - sum) / A(k, k);
+            }
+        }
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < i; j++) {
+                L(i, j) = A(i, j);
+            }
+        }
+
+        for (int i = 0; i < size; i++) {
+            L(i ,i) = 1;
+            D(i, i) = A(i, i);
+        }
+    }
+
     ostream &operator<<(ostream &out, const Matrix &M) {
         if (M.m_ == 0 || M.n_ == 0) {
             out << "[empty matrix]";

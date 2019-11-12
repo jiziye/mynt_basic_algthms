@@ -2,10 +2,14 @@
 // Created by cg on 9/16/19.
 //
 
+#include <chrono>
+
 #include <gtest/gtest.h>
 
 #include <Eigen/Core>
+#include <Eigen/Dense>
 #include <Eigen/SVD>
+#include <Eigen/Cholesky>
 
 #include "maths/math_basics.h"
 #include "maths/vector.h"
@@ -153,3 +157,43 @@ TEST(math, SVD)
     std::cout << "SVD W (Viso2):\n" << W << std::endl;
 }
 
+TEST(math, ldlt) {
+    Eigen::MatrixXd emx;
+    emx.setRandom(3, 3);
+
+//    Eigen::MatrixXd emx(3,4);
+//    emx << 1,2,3,4, 4,5,6,7, 7,8,9,10;
+
+    emx = emx * emx.transpose();
+
+    Eigen::VectorXd b1 = Eigen::VectorXd::Random(3);
+
+    std::cout << "LDLT L (Eigen): \n" << emx.ldlt().matrixL().toDenseMatrix() << std::endl;
+    std::cout << "LDLT D (Eigen): \n" << emx.ldlt().vectorD() << std::endl;
+
+    auto start_time = std::chrono::steady_clock::now();
+    Eigen::VectorXd x1 = emx.ldlt().solve(b1);
+    auto end_time = std::chrono::steady_clock::now();
+    std::cout << "time Eigen ldlt solve: " << std::chrono::duration<double>(end_time-start_time).count()*1000 << " ms" << std::endl;
+    std::cout << "LDLT (Eigen): \n" << x1 << std::endl;
+
+    mynt::Matrix A(emx.rows(), emx.cols());
+    for(int i=0; i<emx.rows(); ++i)
+        for(int j=0; j<emx.cols(); ++j)
+            A(i, j) = emx(i, j);
+
+    mynt::Matrix L, D;
+    mynt::Vector3 b;
+    b[0] = b1[0];
+    b[1] = b1[1];
+    b[2] = b1[2];
+    A.ldlt(L, D);
+    std::cout << "LDLT L:\n" << L << std::endl;
+    std::cout << "LDLT D:\n" << D << std::endl;
+
+    start_time = std::chrono::steady_clock::now();
+    mynt::Vector3 x = mynt::solve_ldlt(A, b);
+    end_time = std::chrono::steady_clock::now();
+    std::cout << "time mynt ldlt solve: " << std::chrono::duration<double>(end_time-start_time).count()*1000 << " ms" << std::endl;
+    std::cout << "LDLT:\n" << x << std::endl;
+}

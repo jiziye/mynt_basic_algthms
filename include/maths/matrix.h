@@ -130,6 +130,8 @@ namespace mynt {
         bool solve(const Matrix &M, FLOAT eps = 1e-20);            // solve linear system M*x=B, replaces *this and M
         bool lu(int32_t *idx, FLOAT &d, FLOAT eps = 1e-20);        // replace *this by lower upper decomposition
         void svd(Matrix &U, Matrix &W, Matrix &V);                 // singular value decomposition *this = U*diag(W)*V^T
+        void ldlt01(Matrix &L, Matrix &D);
+        void ldlt(Matrix &L, Matrix &D) const; // ref: https://blog.csdn.net/zhangchao3322218/article/details/7412688
 
         /**
          * @brief print matrix to stream

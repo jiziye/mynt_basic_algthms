@@ -58,4 +58,10 @@ namespace mynt {
             mat(i, 1) = v2[i];
         return mat;
     }
+
+    VectorX solve_ldlt(const Matrix &A, const VectorX &b) {
+        mynt::Matrix L, D;
+        A.ldlt(L, D);
+        return L.transpose().inv() * D.inv() * L.inv() * b;
+    }
 }

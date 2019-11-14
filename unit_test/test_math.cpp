@@ -11,6 +11,8 @@
 #include <Eigen/SVD>
 #include <Eigen/Cholesky>
 
+#include <opencv2/core/core.hpp>
+
 #include "maths/math_basics.h"
 #include "maths/vector.h"
 #include "maths/random_numbers.h"
@@ -140,18 +142,33 @@ TEST(math, SVD)
     Eigen::MatrixXd emx;
     emx.setRandom(6, 9);
 
+    /// Eigen
     Eigen::JacobiSVD<Eigen::MatrixXd> svd_helper(emx, Eigen::ComputeFullU | Eigen::ComputeThinV);
+    std::cout << "=============== Eigen ================" << std::endl;
     std::cout << "SVD U (Eigen): \n" << svd_helper.matrixU() << std::endl;
     std::cout << "SVD V (Eigen): \n" << svd_helper.matrixV() << std::endl;
     std::cout << "SVD S (Eigen): \n" << svd_helper.singularValues() << std::endl;
 
+    /// OpenCV
+    cv::Mat cvH(emx.rows(), emx.cols(), CV_32F);
+    for(int i=0; i<emx.rows(); ++i)
+        for(int j=0; j<emx.cols(); ++j)
+            cvH.at<float>(i, j) = emx(i, j);
+    cv::Mat cvS, cvU, cvVt;
+    cv::SVD::compute(cvH, cvS, cvU, cvVt, cv::SVD::FULL_UV); // cv::SVD::FULL_UV
+    std::cout << "=============== OpenCV ================" << std::endl;
+    std::cout << "SVD U (OpenCV): \n" << cvU << std::endl;
+    std::cout << "SVD V (OpenCV): \n" << cvVt.t() << std::endl;
+    std::cout << "SVD S (OpenCV): \n" << cvS << std::endl;
+
+    /// mynt
     mynt::Matrix A(emx.rows(), emx.cols());
     for(int i=0; i<emx.rows(); ++i)
         for(int j=0; j<emx.cols(); ++j)
             A(i, j) = emx(i, j);
-
     mynt::Matrix U, W, V;
     A.svd(U, W, V);
+    std::cout << "=============== Viso2 ================" << std::endl;
     std::cout << "SVD U (Viso2):\n" << U << std::endl;
     std::cout << "SVD V (Viso2):\n" << V << std::endl;
     std::cout << "SVD W (Viso2):\n" << W << std::endl;

@@ -6,17 +6,18 @@ if(Eigen3_FOUND)
     include_directories(${EIGEN3_INCLUDE_DIR})
 endif()
 
-link_libraries(gtest pthread)
-
-## maths
-add_executable(test_maths gtest_main.cpp test_math.cpp)
-target_link_libraries(test_maths mynt_maths)
-
-## computer vision
 find_package(OpenCV REQUIRED COMPONENTS core highgui imgproc features2d video calib3d)
 if(OpenCV_FOUND)
     include_directories(${OpenCV_INCLUDE_DIRS})
 endif()
+
+link_libraries(gtest pthread)
+
+## maths
+add_executable(test_maths gtest_main.cpp test_math.cpp)
+target_link_libraries(test_maths mynt_maths ${OpenCV_LIBS})
+
+## computer vision
 add_executable(test_cv gtest_main.cpp test_cv.cpp)
 target_link_libraries(test_cv mynt_cv ${OpenCV_LIBS})
 

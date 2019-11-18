@@ -41,6 +41,12 @@ namespace mynt {
         const Quarternion quarternion() const;
 
         /**
+         * @brief Convert a rotation matrix to a Hamilton quaternion.
+         * @return
+         */
+        const Quarternion quarternion_hamilton() const;
+
+        /**
          * @brief Rotation Matrix to Axis Angle
          *        ref: https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#rodrigues
          * @details

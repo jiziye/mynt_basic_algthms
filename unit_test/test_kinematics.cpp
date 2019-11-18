@@ -66,14 +66,19 @@ TEST(kinematics, RotationMatrix)
     mynt::Quarternion qa = mynt::Quarternion::unit_random();
     mynt::RotationMatrix m_qa = qa.rotation_matrix();
 
-    std::cout << "m_qa:\n" << m_qa << std::endl;
-
-    std::cout << "q01: " << m_qa.quarternion() << std::endl;
-
     Eigen::Matrix3d m3;
     for(int i=0; i<3; ++i)
         for(int j=0; j<3; ++j)
             m3(i,j) = m_qa(i,j);
+
+    std::cout << "m_qa:\n" << m_qa << std::endl;
+
+    std::cout << "q01: " << m_qa.quarternion() << endll;
+
+    std::cout << "q01 hamilton: " << m_qa.quarternion_hamilton() << std::endl;
+    Eigen::Quaterniond q4_r(m3);
+    std::cout << "q01 hamilton (Eigen): " << q4_r.coeffs().transpose() << endll;
+
     std::cout << "q02: " << msckf::rotationToQuaternion(m3).transpose() << endll;
 
     std::cout << "angle_axis(by RotationMatrix): \t" << m_qa.angle_axis() << std::endl;

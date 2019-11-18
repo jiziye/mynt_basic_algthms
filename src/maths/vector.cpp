@@ -60,8 +60,14 @@ namespace mynt {
     }
 
     VectorX solve_ldlt(const Matrix &A, const VectorX &b) {
+        VectorX x(b.size());
         mynt::Matrix L, D;
         A.ldlt(L, D);
-        return L.transpose().inv() * D.inv() * L.inv() * b;
+        mynt::Matrix Linv = L.inv();
+        mynt::Matrix Dinv(D.rows(), D.cols());
+        for(int i=0; i<Dinv.rows(); i++)
+                Dinv(i,i) = 1.0 / D(i,i);
+        x = Linv.transpose() * Dinv * Linv * b;
+        return x;
     }
 }

@@ -4,8 +4,8 @@
 
 #include "cv/visual_tracking.h"
 
-//#include <Eigen/Core>
-//#include <Eigen/Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 
 #include "maths/vector.h"
 
@@ -35,14 +35,13 @@ namespace mynt {
             double cost = 0, lastCost = 0;
             bool succ = 1; // indicate if this point succeeded
 
-            mynt::Vector2 Jf; // forward J
-            std::vector<mynt::Vector2> vJ; // inverse
-            mynt::Matrix H(2, 2);
-            mynt::Vector2 b;
-
+            Eigen::Vector2d Jf; // forward J
+            std::vector<Eigen::Vector2d> vJ; // inverse
+            Eigen::Matrix2d H = Eigen::Matrix2d::Zero();
+            Eigen::Vector2d b = Eigen::Vector2d::Zero();
             // pre-compute J and H for Inverse Composition
             if (inverse) {
-                mynt::Vector2 Ji;
+                Eigen::Vector2d Ji;
                 for (int x = -half_patch_size; x < half_patch_size; x++) {
                     for (int y = -half_patch_size; y < half_patch_size; y++) {
                         float xf = kpt.x + x;
@@ -56,49 +55,41 @@ namespace mynt {
                     }
                 }
             }
-
             // Gauss-Newton iterations
             for (int iter = 0; iter < max_iters; iter++) {
                 cost = 0;
-
                 if (kpt.x + dx <= half_patch_size || kpt.x + dx >= img1.cols() - half_patch_size ||
                     kpt.y + dy <= half_patch_size || kpt.y + dy >= img1.rows() - half_patch_size) {
                     succ = 0;
                     break;
                 }
-
                 if(inverse)
-                    b = mynt::Vector2();
+                    b = Eigen::Vector2d::Zero();
                 else {
-                    H = mynt::Matrix(2, 2);
-                    b = mynt::Vector2();
+                    H = Eigen::Matrix2d::Zero();
+                    b = Eigen::Vector2d::Zero();
                 }
-
                 int n = 0;
                 for (int x = -half_patch_size; x < half_patch_size; x++) {
                     for (int y = -half_patch_size; y < half_patch_size; y++) {
                         float xf = kpt.x + x;
                         float yf = kpt.y + y;
-
                         double error = get_pixel_value(img2, xf + dx, yf + dy) - get_pixel_value(img1, xf, yf);
-
                         cost += error * error;
-
                         if (inverse) {
-                            b += -vJ[n] * error;
+                            b += -vJ[n].transpose() * error;
                             n++;
                         } else {
                             Jf[0] = (get_pixel_value(img2, xf + dx + 1, yf + dy) -
-                                    get_pixel_value(img2, xf + dx - 1, yf + dy)) / 2;
+                                     get_pixel_value(img2, xf + dx - 1, yf + dy)) / 2;
                             Jf[1] = (get_pixel_value(img2, xf + dx, yf + dy + 1) -
-                                    get_pixel_value(img2, xf + dx, yf + dy - 1)) / 2;
+                                     get_pixel_value(img2, xf + dx, yf + dy - 1)) / 2;
                             H += Jf * Jf.transpose();
-                            b += -Jf * error;
+                            b += -Jf.transpose() * error;
                         }
                     }
                 }
-
-                mynt::Vector2 update = mynt::solve_ldlt(H, b);
+                Eigen::Vector2d update = H.ldlt().solve(b);
 
                 if (std::isnan(update[0])) {
                     // sometimes occurred when we have a black or white patch and H is irreversible

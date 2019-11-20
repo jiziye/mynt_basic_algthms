@@ -27,6 +27,14 @@ namespace mynt {
                 val_[i][j] = val[k++];
     }
 
+    Matrix::Matrix(const int32_t m, const int32_t n, const float *val) {
+        allocate_memory(m, n);
+        int32_t k = 0;
+        for (int32_t i = 0; i < m; i++)
+            for (int32_t j = 0; j < n; j++)
+                val_[i][j] = val[k++];
+    }
+
     Matrix::Matrix(const Matrix &M) {
         allocate_memory(M.m_, M.n_);
         for (int32_t i = 0; i < M.m_; i++)

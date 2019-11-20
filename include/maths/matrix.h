@@ -18,6 +18,7 @@ namespace mynt {
         Matrix(const int32_t m, const int32_t n);                    // init empty mxn matrix
         Matrix(const int32_t m, const int32_t n, const FLOAT *val_); // init mxn matrix with values from array 'val'
         Matrix(const Matrix &M);                                     // creates deepcopy of M
+        Matrix(const int32_t m, const int32_t n, const float *val_); // init mxn matrix with values from array 'val'
 
         virtual ~Matrix();
 

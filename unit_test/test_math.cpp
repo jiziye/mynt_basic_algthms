@@ -17,6 +17,8 @@
 #include "maths/vector.h"
 #include "maths/random_numbers.h"
 
+#include "maths/svd_fulluv.h"
+
 TEST(maths, random_number)
 {
     random_numbers::RandomNumberGenerator random_gen;
@@ -140,10 +142,10 @@ TEST(maths, math_basic)
 TEST(math, SVD)
 {
     Eigen::MatrixXd emx;
-    emx.setRandom(6, 9);
+    emx.setRandom(11, 9);
 
     /// Eigen
-    Eigen::JacobiSVD<Eigen::MatrixXd> svd_helper(emx, Eigen::ComputeFullU | Eigen::ComputeThinV);
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd_helper(emx, Eigen::ComputeFullU | Eigen::ComputeFullV);
     std::cout << "=============== Eigen ================" << std::endl;
     std::cout << "SVD U (Eigen): \n" << svd_helper.matrixU() << std::endl;
     std::cout << "SVD V (Eigen): \n" << svd_helper.matrixV() << std::endl;
@@ -155,7 +157,10 @@ TEST(math, SVD)
         for(int j=0; j<emx.cols(); ++j)
             cvH.at<float>(i, j) = emx(i, j);
     cv::Mat cvS, cvU, cvVt;
+    auto start_time = std::chrono::steady_clock::now();
     cv::SVD::compute(cvH, cvS, cvU, cvVt, cv::SVD::FULL_UV); // cv::SVD::FULL_UV
+    auto end_time = std::chrono::steady_clock::now();
+    std::cout << "time OpenCV SVD solve: " << std::chrono::duration<double>(end_time-start_time).count()*1000 << " ms" << std::endl;
     std::cout << "=============== OpenCV ================" << std::endl;
     std::cout << "SVD U (OpenCV): \n" << cvU << std::endl;
     std::cout << "SVD V (OpenCV): \n" << cvVt.t() << std::endl;
@@ -172,6 +177,22 @@ TEST(math, SVD)
     std::cout << "SVD U (Viso2):\n" << U << std::endl;
     std::cout << "SVD V (Viso2):\n" << V << std::endl;
     std::cout << "SVD W (Viso2):\n" << W << std::endl;
+
+    /// Shen
+    mynt::Matrix In(emx.rows(), emx.cols()), U1, W1, Vt1;
+    for (int i = 0; i < emx.rows(); i++) {
+        for (int j = 0; j < emx.cols(); j++) {
+            In(i, j) = emx(i, j);
+        }
+    }
+    start_time = std::chrono::steady_clock::now();
+    mynt::svd_fulluv(In, W1, U1, Vt1);
+    end_time = std::chrono::steady_clock::now();
+    std::cout << "time Shen SVD solve: " << std::chrono::duration<double>(end_time-start_time).count()*1000 << " ms" << std::endl;
+    std::cout << "=============== Shen ================" << std::endl;
+    std::cout << "SVD U (Shen):\n" << U1 << std::endl;
+    std::cout << "SVD V (Shen):\n" << Vt1.transpose() << std::endl;
+    std::cout << "SVD W (Shen):\n" << W1 << std::endl;
 }
 
 TEST(math, ldlt) {

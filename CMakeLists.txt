@@ -35,14 +35,19 @@ if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
     link_directories(${Boost_LIBRARY_DIR})
 endif()
-add_library(mynt_maths SHARED src/maths/math_basics.cpp src/maths/matrix.cpp src/maths/vector.cpp src/maths/random_numbers.cpp)
+find_package(OpenCV REQUIRED COMPONENTS core)
+if(OpenCV_FOUND)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+endif()
+add_library(mynt_maths SHARED src/maths/math_basics.cpp src/maths/matrix.cpp src/maths/vector.cpp src/maths/random_numbers.cpp src/maths/svd_fulluv.cpp)
 target_link_libraries(mynt_maths ${Boost_LIBRARIES})
 
 ## kinematics
 add_library(mynt_kinematics SHARED src/kinematics/rotation_matrix.cpp src/kinematics/quarternion.cpp src/kinematics/convertor.cpp)
-target_link_libraries(mynt_kinematics mynt_maths)
+target_link_libraries(mynt_kinematics mynt_maths ${OpenCV_LIBS})
 
 ## computer vision
+include_directories(${EIGEN3_INCLUDE_DIR})
 add_library(mynt_cv SHARED
         src/cv/types.cpp src/cv/undistort.cpp src/cv/calib3d.cpp src/cv/corner_detector.cpp src/cv/visual_tracking.cpp src/cv/image_filtering.cpp)
 target_link_libraries(mynt_cv mynt_kinematics fast)

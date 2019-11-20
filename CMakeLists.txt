@@ -35,11 +35,16 @@ if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
     link_directories(${Boost_LIBRARY_DIR})
 endif()
-find_package(OpenCV REQUIRED COMPONENTS core)
-if(OpenCV_FOUND)
-    include_directories(${OpenCV_INCLUDE_DIRS})
-endif()
-add_library(mynt_maths SHARED src/maths/math_basics.cpp src/maths/matrix.cpp src/maths/vector.cpp src/maths/random_numbers.cpp src/maths/svd_fulluv.cpp)
+#find_package(OpenCV REQUIRED COMPONENTS core)
+#if(OpenCV_FOUND)
+#    include_directories(${OpenCV_INCLUDE_DIRS})
+#endif()
+add_library(mynt_maths SHARED
+        src/maths/math_basics.cpp
+        src/maths/matrix.cpp
+        src/maths/vector.cpp
+        src/maths/random_numbers.cpp
+        src/maths/svd_fulluv.cpp)
 target_link_libraries(mynt_maths ${Boost_LIBRARIES})
 
 ## kinematics

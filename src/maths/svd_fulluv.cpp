@@ -4,9 +4,10 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <float.h>
+#include <cmath>
 
-#include <opencv2/core/core.hpp>
-
+#include "maths/math_basics.h"
 #include "maths/matrix.h"
 
 namespace mynt {
@@ -141,7 +142,9 @@ namespace mynt {
         if (!Vt)
             return;
 
-        cv::RNG rng(0x12345678); /* 如果要这个函数和Opencv保持一致，这个函数需要替代，建议使用 RNG_MT19937 算法 */
+//        cv::RNG rng(0x12345678); /* 如果要这个函数和Opencv保持一致，这个函数需要替代，建议使用 RNG_MT19937 算法 0x12345678*/
+
+        mynt::rng_mwc_init(0x12345678);
 
         for (i = 0; i < n1; i++) {
             sd = i < n ? W[i] : 0;
@@ -149,7 +152,8 @@ namespace mynt {
             for (int ii = 0; ii < 100 && sd <= minval; ii++) {
                 const float val0 = (float) (1. / m);
                 for (k = 0; k < m; k++) {
-                    float val = (rng.next() & 256) != 0 ? val0 : -val0;
+//                     float val = (rng.next() & 256) != 0 ? val0 : -val0;
+                    float val = (mynt::rng_mwc_next() & 256) != 0 ? val0 : -val0;
                     At[i * astep + k] = val;
                 }
                 for (iter = 0; iter < 2; iter++) {

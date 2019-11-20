@@ -28,6 +28,18 @@ TEST(maths, random_number)
 
     std::cout << "rng01: " << rng01 << std::endl;
     std::cout << "rng02: " << rng02 << std::endl;
+
+    std::mt19937 rng_stdmt(0x12345678);
+    std::cout << "rng03: " << rng_stdmt() << std::endl;
+
+    cv::RNG_MT19937 rng_cvmt(0x12345678);
+    std::cout << "rng04: " << rng_cvmt.next() << std::endl;
+
+    cv::RNG rng(0x12345678);
+    std::cout << "rng05: " << rng.next() << std::endl;
+
+    mynt::rng_mwc_init(0x12345678);
+    std::cout << "rng06: " << mynt::rng_mwc_next() << std::endl;
 }
 
 TEST(maths, Matrix)
@@ -167,16 +179,16 @@ TEST(math, SVD)
     std::cout << "SVD S (OpenCV): \n" << cvS << std::endl;
 
     /// mynt
-    mynt::Matrix A(emx.rows(), emx.cols());
-    for(int i=0; i<emx.rows(); ++i)
-        for(int j=0; j<emx.cols(); ++j)
-            A(i, j) = emx(i, j);
-    mynt::Matrix U, W, V;
-    A.svd(U, W, V);
-    std::cout << "=============== Viso2 ================" << std::endl;
-    std::cout << "SVD U (Viso2):\n" << U << std::endl;
-    std::cout << "SVD V (Viso2):\n" << V << std::endl;
-    std::cout << "SVD W (Viso2):\n" << W << std::endl;
+//    mynt::Matrix A(emx.rows(), emx.cols());
+//    for(int i=0; i<emx.rows(); ++i)
+//        for(int j=0; j<emx.cols(); ++j)
+//            A(i, j) = emx(i, j);
+//    mynt::Matrix U, W, V;
+//    A.svd(U, W, V);
+//    std::cout << "=============== Viso2 ================" << std::endl;
+//    std::cout << "SVD U (Viso2):\n" << U << std::endl;
+//    std::cout << "SVD V (Viso2):\n" << V << std::endl;
+//    std::cout << "SVD W (Viso2):\n" << W << std::endl;
 
     /// Shen
     mynt::Matrix In(emx.rows(), emx.cols()), U1, W1, Vt1;
